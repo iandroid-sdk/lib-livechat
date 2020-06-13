@@ -1,0 +1,3 @@
+rootProject.name='livechat'
+include ':app'
+include ':live_livechat'
