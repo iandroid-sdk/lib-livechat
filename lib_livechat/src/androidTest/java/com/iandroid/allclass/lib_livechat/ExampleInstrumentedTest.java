@@ -1,4 +1,4 @@
-package com.iandroid.allclass.liveChat;
+package com.iandroid.allclass.lib_livechat;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.iandroid.allclass.liveChat", appContext.getPackageName());
+        assertEquals("com.iandroid.allclass.lib_livechat.test", appContext.getPackageName());
     }
 }

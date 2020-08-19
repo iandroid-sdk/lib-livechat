@@ -1,4 +1,4 @@
-package com.iandroid.allclass.liveChat;
+package com.iandroid.allclass.lib_livechat;
 
 import org.junit.Test;
 
