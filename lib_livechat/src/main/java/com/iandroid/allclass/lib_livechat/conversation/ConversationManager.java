@@ -32,7 +32,6 @@ public class ConversationManager {
     private int nextOfficalConversationIndex = 0;
     private int nextUserConversationIndex = 0;
     private final int maxRetryTime = 10;
-    private int retry_times = 0;
 
     //获取会话列表
     public Disposable conversationRequest() {
@@ -40,12 +39,11 @@ public class ConversationManager {
         curUserConversationIndex = 0;
         nextOfficalConversationIndex = 0;
         nextUserConversationIndex = 0;
-        retry_times = 0;
-        return Observable.interval(1, 3, TimeUnit.SECONDS)
+        return Observable.intervalRange(1, maxRetryTime, 0, 3, TimeUnit.SECONDS)
                 .takeWhile(new Predicate<Long>() {
                     @Override
                     public boolean test(Long aLong) throws Exception {
-                        return retry_times < maxRetryTime && !isEndOfConversation();
+                        return !isEndOfConversation();
                     }
                 })
                 .doFinally(new Action() {
@@ -57,7 +55,6 @@ public class ConversationManager {
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long integer) throws Exception {
-                        retry_times++;
                         if (curOfficalConversationIndex <= nextOfficalConversationIndex)
                             StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
                                     getConversationRequestParam(nextOfficalConversationIndex,
