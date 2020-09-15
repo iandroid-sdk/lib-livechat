@@ -62,4 +62,16 @@ public class SocketUtils {
         return defValue;
     }
 
+    public static boolean isJson(String param) {
+        boolean b = isBlank(param);
+        if (!b) {
+            return param.startsWith("{") || param.startsWith("[");
+        }
+
+        return false;
+    }
+
+    public static boolean isBlank(String param) {
+        return param == null || param.trim().equals("") || param.trim().equals("null");
+    }
 }

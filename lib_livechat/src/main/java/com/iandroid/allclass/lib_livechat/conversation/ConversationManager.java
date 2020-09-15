@@ -48,6 +48,7 @@ public class ConversationManager {
     public void addConversations(List<ConversationItem> datalist) {
         for (ConversationItem item : datalist) {
             int index = conversationItemList.indexOf(item);
+            item.parse();
             if (index >= 0) {
                 item.setUser_info(conversationItemList.get(index).getUser_info());
                 conversationItemList.set(index, item);
@@ -77,8 +78,9 @@ public class ConversationManager {
         conversationItem.setIndex(conversationSaidReponse.getIndex());
         conversationItem.setUnread(conversationSaidReponse.getUnread());
         conversationItem.setTs(conversationSaidReponse.getTs());
-
+        conversationItem.parse();
         if (isNeedAdd) {
+
             conversationItemList.add(conversationItem);
         }
 

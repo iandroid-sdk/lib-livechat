@@ -1,5 +1,11 @@
 package com.iandroid.allclass.lib_livechat.bean;
 
+import android.text.TextUtils;
+
+import com.alibaba.fastjson.JSON;
+import com.iandroid.allclass.lib_livechat.api.MsgTypeDef;
+import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
+
 import androidx.annotation.Nullable;
 
 /**
@@ -14,6 +20,7 @@ public class ConversationItem {
     private int unread;
     private int user_flag = 0;
     private Object user_info = null;//用户详情信息，比如昵称、头像等
+    protected ConversationContent real_content;
 
     public Object getUser_info() {
         return user_info;
@@ -71,6 +78,26 @@ public class ConversationItem {
         this.content = content;
     }
 
+    public ConversationContent getReal_content() {
+        return real_content;
+    }
+
+    public void setReal_content(ConversationContent real_content) {
+        this.real_content = real_content;
+    }
+
+    public String getMsgContentText() {
+        if (real_content != null) {
+            if (real_content.getMsg_type() == MsgTypeDef.MSG_SUBTYPE_NOTIFY
+                    || TextUtils.isEmpty(real_content.getTitle())) {
+                return real_content.getContent();
+            } else {
+                return real_content.getTitle();
+            }
+        }
+        return getContent();
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if(obj != null && obj instanceof ConversationItem){
@@ -80,5 +107,15 @@ public class ConversationItem {
             }
         }
         return super.equals(obj);
+    }
+
+    public void parse() {
+        try {
+            if (SocketUtils.isJson(getContent())) {
+                real_content = JSON.parseObject(getContent(), ConversationContent.class);
+            }
+        } catch (Exception e) {
+            real_content = null;
+        }
     }
 }
