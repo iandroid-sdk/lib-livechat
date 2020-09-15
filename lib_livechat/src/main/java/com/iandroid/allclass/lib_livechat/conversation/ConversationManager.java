@@ -1,142 +1,172 @@
 package com.iandroid.allclass.lib_livechat.conversation;
 
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.iandroid.allclass.lib_livechat.api.StateChat;
-import com.iandroid.allclass.lib_livechat.bean.ConversationList;
+import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
+import com.iandroid.allclass.lib_livechat.bean.ConversationItem;
+import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
+import com.iandroid.allclass.lib_livechat.socket.BaseSocket;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
-import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
 
 import org.json.JSONObject;
 
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * created by wangkm
  * on 2020/8/18.
- * 私信会话管理
+ * 私信会话数据管理
  */
 public class ConversationManager {
-    private static final int pagesize = 40;
-    private int curOfficalConversationIndex = 0;
-    private int curUserConversationIndex = 0;
-
-    private int nextOfficalConversationIndex = 0;
-    private int nextUserConversationIndex = 0;
-    private final int maxRetryTime = 10;
-
-    //获取会话列表
-    public Disposable conversationRequest() {
-        curOfficalConversationIndex = 0;
-        curUserConversationIndex = 0;
-        nextOfficalConversationIndex = 0;
-        nextUserConversationIndex = 0;
-        return Observable.intervalRange(1, maxRetryTime, 0, 3, TimeUnit.SECONDS)
-                .takeWhile(new Predicate<Long>() {
-                    @Override
-                    public boolean test(Long aLong) throws Exception {
-                        return !isEndOfConversation();
-                    }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.d("lang_socket", "[conversation]Request finally");
-                    }
-                })
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long integer) throws Exception {
-                        if (curOfficalConversationIndex <= nextOfficalConversationIndex)
-                            StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
-                                    getConversationRequestParam(nextOfficalConversationIndex,
-                                            pagesize,
-                                            SocketUtils.transactionId(String.valueOf(nextOfficalConversationIndex) + "_")));
-
-                        if (curUserConversationIndex <= nextUserConversationIndex) {
-                            StateChat.getInstance().send(SocketEvent.EVENT_C2S_OFFICIAL_ULIST,
-                                    getConversationRequestParam(nextUserConversationIndex,
-                                            pagesize,
-                                            SocketUtils.transactionId(String.valueOf(nextUserConversationIndex) + "_")));
-
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                });
-    }
-
-    private static JSONObject getConversationRequestParam(int start, int count, String sid) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("start", start);
-            obj.put("count", count);
-            obj.put("sid", sid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            obj = null;
-        }
-        return obj;
-    }
-
-    private boolean isEndOfConversation() {
-        return curOfficalConversationIndex > nextOfficalConversationIndex
-                && curUserConversationIndex > nextUserConversationIndex;
-    }
-
-    public Object conversationResponse(String event, Object[] original) {
-        if (original == null || original.length <= 0) return null;
-
-        ConversationList conversationList = null;
-        try {
-            conversationList = JSON.parseObject(original[0].toString(), ConversationList.class);
-            int responsePagesize = conversationList.getResult() != null ? conversationList.getResult().size() : 0;
-            int responsePageIndex = SocketUtils.toInt(conversationList.getSid().substring(0, conversationList.getSid().indexOf("_")), 0);
-            //hasMore 为true 可能还有更多数据，需要继续请求下一页
-            boolean hasMore = responsePagesize >= pagesize;
-            boolean isFromOfficalConversation = TextUtils.equals(event, SocketEvent.EVENT_PRIVATECHAT_OFFICIAL_ULIST);
-            if (isFromOfficalConversation) {
-                if (hasMore) {
-                    nextOfficalConversationIndex = ++responsePageIndex;
-                    curOfficalConversationIndex = nextOfficalConversationIndex;
-                    //Log.d("lang_socket", "officialConversation hasmore, nextpage:" + (nextOfficalConversationIndex));
-
-                } else {
-                    Log.d("lang_socket", "[Conversation]official isEnd, totalPage:" + (responsePageIndex + 1));
-                    curOfficalConversationIndex++;
-                }
-            } else {
-                if (hasMore) {
-                    nextUserConversationIndex = ++responsePageIndex;
-                    curUserConversationIndex = nextUserConversationIndex;
-                    //Log.d("lang_socket", "userConversation hasmore, nextpage:" + (nextUserConversationIndex));
-                } else {
-                    Log.d("lang_socket", "[Conversation]user isEnd, totalPage:" + (responsePageIndex + 1));
-                    curUserConversationIndex++;
-                }
-            }
-        } catch (Exception e) {
-            Log.d("lang_socket", "[Conversation]Exception:" + e);
-        }
-        return conversationList;
-    }
+    private List<ConversationItem> conversationItemList;
 
     private static class LazyHolder {
         private static final ConversationManager sInstance = new ConversationManager();
     }
 
+    public ConversationManager() {
+        conversationItemList = new ArrayList<>();
+    }
+
     public static ConversationManager getInstance() {
         return ConversationManager.LazyHolder.sInstance;
+    }
+
+    public List<ConversationItem> getConversationItemList() {
+        return conversationItemList;
+    }
+
+    /**
+     * 添加会话列表
+     *
+     * @param datalist
+     */
+    public void addConversations(List<ConversationItem> datalist) {
+        for (ConversationItem item : datalist) {
+            int index = conversationItemList.indexOf(item);
+            if (index >= 0) {
+                item.setUser_info(conversationItemList.get(index).getUser_info());
+                conversationItemList.set(index, item);
+            } else {
+                conversationItemList.add(item);
+            }
+        }
+        Collections.sort(conversationItemList, comparator);
+    }
+
+    public void updateConversationOnSaid(ConversationSaidReponse conversationSaidReponse,
+                                         IStateKeyCallBack iStateKeyCallBack) {
+        if (conversationSaidReponse == null || TextUtils.isEmpty(conversationSaidReponse.getPfid()))
+            return;
+
+        ConversationItem conversationItem = new ConversationItem();
+        conversationItem.setPfid(conversationSaidReponse.getPfid());
+
+        int index = conversationItemList.indexOf(conversationItem);
+        boolean isNeedAdd = false;
+
+        if (index >= 0) {
+            conversationItem = conversationItemList.get(index);
+            isNeedAdd = true;
+        }
+        conversationItem.setContent(conversationSaidReponse.getContent());
+        conversationItem.setIndex(conversationSaidReponse.getIndex());
+        conversationItem.setUnread(conversationSaidReponse.getUnread());
+        conversationItem.setTs(conversationSaidReponse.getTs());
+
+        if (isNeedAdd) {
+            conversationItemList.add(conversationItem);
+        }
+
+        Collections.sort(conversationItemList, comparator);
+
+        if (iStateKeyCallBack != null) {
+            iStateKeyCallBack.onReceiveChat(conversationItem);
+            iStateKeyCallBack.updateUnreadMsgNum(null, getTotalUnreadMsgNum());
+        }
+    }
+
+    /**
+     * 更新会话用户信息
+     *
+     * @param pfid
+     * @param userInfo
+     */
+    public void updateUserInfo(String pfid, Object userInfo) {
+        if (TextUtils.isEmpty(pfid) || userInfo == null) return;
+
+        for (ConversationItem item : conversationItemList) {
+            if (item != null
+                    && !TextUtils.isEmpty(item.getPfid())
+                    && item.getPfid().equals(pfid)) {
+                item.setUser_info(userInfo);
+            }
+        }
+    }
+
+    /**
+     * 清除指定用户的未读消息
+     */
+    public void clearUnreadMsg(ConversationItem conversationItem) {
+        if (conversationItem == null) return;
+        boolean code = StateChat.getInstance().send(SocketEvent.EVENT_C2S_READ,
+                genImRead(conversationItem.getPfid(), BaseSocket.genChatTransactionId(SocketEvent.IM_HEAD_READ), null));
+        if (code) {
+            resetConversationUnreadInfoByItem(conversationItem);
+        }
+    }
+
+    private void resetConversationUnreadInfoByItem(ConversationItem conversationItem) {
+        if (conversationItem == null) return;
+        for (ConversationItem item : conversationItemList) {
+            if (item != null
+                    && item.equals(conversationItem)
+                    && item.getUnread() > 0) {
+                item.setUnread(0);
+            }
+        }
+    }
+
+    private int getTotalUnreadMsgNum() {
+        int total = 0;
+        for (ConversationItem item : conversationItemList) {
+            if (item != null) {
+                total += item.getUnread();
+            }
+        }
+        return total;
+    }
+
+    private Comparator comparator = (obj1, obj2) -> {
+        ConversationItem s1 = (ConversationItem) obj1;
+        ConversationItem s2 = (ConversationItem) obj2;
+
+        if (s1.getTs() > s2.getTs()) {
+            return -1;
+        } else if (s1.getTs() < s2.getTs()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    };
+
+    public static JSONObject genImRead(String contact_pfid,
+                                       String sid,
+                                       String index) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("contact_pfid", contact_pfid);
+            obj.put("sid", sid);
+            if (!TextUtils.isEmpty(index))
+                obj.put("index", index);
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj = null;
+        }
+        return obj;
     }
 }

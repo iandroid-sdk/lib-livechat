@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.iandroid.allclass.lib_livechat.api.Config;
 import com.iandroid.allclass.lib_livechat.api.StateChat;
-import com.iandroid.allclass.lib_livechat.conversation.ConversationManager;
+import com.iandroid.allclass.lib_livechat.conversation.ConversationGetter;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
 import org.json.JSONException;
@@ -25,6 +25,8 @@ public class StateChatPresenter extends ChatManager {
         super(iSocketEventHandler);
         socket_event_list.add(SocketEvent.EVENT_PRIVATECHAT_OFFICIAL_ULIST);
         socket_event_list.add(SocketEvent.EVENT_PRIVATECHAT_UNOFFICIAL_ULIST);
+        socket_event_list.add(SocketEvent.EVENT_PRIVATECHAT_SAID);
+
     }
 
     @Override
@@ -58,7 +60,7 @@ public class StateChatPresenter extends ChatManager {
                     SocketEvent.enmStateAction.enmActionNull,
                     null);
             //获取私信回话列表（官方&非官方）
-            mDisposable.add(ConversationManager.getInstance().conversationRequest());
+            mDisposable.add(ConversationGetter.getInstance().conversationRequest());
         }
     }
 
@@ -97,7 +99,7 @@ public class StateChatPresenter extends ChatManager {
         switch (event) {
             case SocketEvent.EVENT_PRIVATECHAT_UNOFFICIAL_ULIST:
             case SocketEvent.EVENT_PRIVATECHAT_OFFICIAL_ULIST:
-                return ConversationManager.getInstance().conversationResponse(event, original);
+                return ConversationGetter.getInstance().conversationResponse(event, original);
         }
         return super.handleEventOnIOThread(event, original);
     }

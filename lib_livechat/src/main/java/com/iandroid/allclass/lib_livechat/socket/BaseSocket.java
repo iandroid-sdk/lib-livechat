@@ -9,6 +9,7 @@ import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.socket.client.IO;
@@ -27,6 +28,7 @@ public class BaseSocket {
     private int hostIndex = 0;
     private IEmitterCallBack iEmitterCallBack;
     private Config config;
+    private static long sSid;
 
     public BaseSocket(IEmitterCallBack iEmitterCallBack) {
         this.iEmitterCallBack = iEmitterCallBack;
@@ -151,5 +153,16 @@ public class BaseSocket {
      */
     public Config getConfig() {
         return config;
+    }
+
+    public static String genChatTransactionId(String head) {
+        if (sSid == 0) {
+            Date now = new Date();
+            sSid = now.getTime();
+        }
+        sSid++;
+        if (head == null)
+            head = "";
+        return head + sSid;
     }
 }

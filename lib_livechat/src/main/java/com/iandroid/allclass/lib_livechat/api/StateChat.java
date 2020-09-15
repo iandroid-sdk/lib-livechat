@@ -1,8 +1,12 @@
 package com.iandroid.allclass.lib_livechat.api;
 
+import com.alibaba.fastjson.JSON;
 import com.iandroid.allclass.lib_livechat.base.ChatManager;
 import com.iandroid.allclass.lib_livechat.base.ISocketEventHandler;
+import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
 import com.iandroid.allclass.lib_livechat.base.StateChatPresenter;
+import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
+import com.iandroid.allclass.lib_livechat.conversation.ConversationManager;
 import com.iandroid.allclass.lib_livechat.exception.LoginException;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
@@ -15,7 +19,7 @@ public class StateChat implements ISocketEventHandler {
     private StateChatPresenter stateChatPresenter;
     private Config roomConfig;//当前所在直播间的配置信息
     private ISocketEventHandler iSocketEventHandler;
-
+    private IStateKeyCallBack iStateKeyCallBack;
     /**
      * 登录
      *
@@ -24,6 +28,8 @@ public class StateChat implements ISocketEventHandler {
      */
     public static void login(Config config) throws LoginException {
         getInstance().iSocketEventHandler = config.socketEventHandler();
+        getInstance().iStateKeyCallBack = config.stateKeyCallBack();
+
         getStateChatPresenter().login(config);
     }
 
@@ -37,14 +43,28 @@ public class StateChat implements ISocketEventHandler {
 
     @Override
     public Object onMsgParse(String event, Object[] original) {
-        return null;
+        Object eventData = null;
+        switch (event) {
+            case SocketEvent.EVENT_PRIVATECHAT_SAID:
+                eventData = JSON.parseObject(original[0].toString(), ConversationSaidReponse.class);
+                break;
+        }
+        return eventData;
     }
 
     @Override
     public void onReceiveMsg(String event, Object[] originalData, Object eventData) {
-
+        switch (event) {
+            case SocketEvent.EVENT_PRIVATECHAT_SAID:
+                if (eventData != null && eventData instanceof ConversationSaidReponse)
+                    ConversationManager.getInstance().updateConversationOnSaid((ConversationSaidReponse) eventData, iStateKeyCallBack);
+                break;
+        }
     }
 
+    public void conversationLoadSuccess() {
+        if (iStateKeyCallBack != null) iStateKeyCallBack.conversationLoadSuccess();
+    }
     /**
      * 缓存当前进入的直播间信息
      *
@@ -89,7 +109,6 @@ public class StateChat implements ISocketEventHandler {
                 break;
         }
     }
-
 
     public boolean send(String event, final Object... args) {
         return getStateChatPresenter().send(event, args);

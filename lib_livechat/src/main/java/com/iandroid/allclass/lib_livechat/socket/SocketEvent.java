@@ -18,13 +18,21 @@ public class SocketEvent {
     public static final String EVENT_C2S_STATUS = "status";
 
     //私信 C2S
+    public static final String EVENT_PRIVATECHAT_SAY = "pmsg/v1/say";
+    public static final String EVENT_PRIVATECHAT_SAID = "pmsg/v1/said";
     public static final String EVENT_C2S_OFFICIAL_ULIST = "pmsg/v1/ulist_official";
     public static final String EVENT_C2S_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
+    public static final String EVENT_C2S_READ = "pmsg/v1/read";
+
+    //room C2S
     public static final String EVENT_C2S_CHAT_MSG = "msg";
 
     //S2C
     public static final String EVENT_PRIVATECHAT_OFFICIAL_ULIST = "pmsg/v1/ulist_official";
     public static final String EVENT_PRIVATECHAT_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
+
+    //msg tag
+    public static final String IM_HEAD_READ = "read";
 
     // state
     public enum enmUserState {

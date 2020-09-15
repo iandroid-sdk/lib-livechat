@@ -1,5 +1,7 @@
 package com.iandroid.allclass.lib_livechat.bean;
 
+import androidx.annotation.Nullable;
+
 /**
  * created by wangkm
  * on 2020/8/18.
@@ -11,6 +13,15 @@ public class ConversationItem {
     private String content;
     private int unread;
     private int user_flag = 0;
+    private Object user_info = null;//用户详情信息，比如昵称、头像等
+
+    public Object getUser_info() {
+        return user_info;
+    }
+
+    public void setUser_info(Object user_info) {
+        this.user_info = user_info;
+    }
 
     public int getUser_flag() {
         return user_flag;
@@ -58,5 +69,16 @@ public class ConversationItem {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj != null && obj instanceof ConversationItem){
+            ConversationItem conversationItem = (ConversationItem)obj;
+            if(conversationItem.getPfid() != null && getPfid() != null){
+                return getPfid().equals(conversationItem.getPfid());
+            }
+        }
+        return super.equals(obj);
     }
 }

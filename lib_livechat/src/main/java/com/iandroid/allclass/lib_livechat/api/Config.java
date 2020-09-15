@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.google.auto.value.AutoValue;
 import com.iandroid.allclass.lib_livechat.base.ISocketEventHandler;
+import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,6 +76,9 @@ public abstract class Config {
     @Nullable
     public abstract ISocketEventHandler socketEventHandler();
 
+    @Nullable
+    public abstract IStateKeyCallBack stateKeyCallBack();
+
     public abstract List<String> ctl_server_list();
 
     public abstract List<String> cht_server_list();
@@ -104,6 +108,7 @@ public abstract class Config {
                 .token("")
                 .pfid("")
                 .selfPfid("")
+                .stateKeyCallBack(null)
                 .area("")
                 .channelId("")
                 .fromSeq("")
@@ -158,6 +163,8 @@ public abstract class Config {
         public abstract Builder area(String area);
 
         public abstract Builder socketEventHandler(ISocketEventHandler socketEventHandler);
+
+        public abstract Builder stateKeyCallBack(IStateKeyCallBack stateKeyCallBack);
 
         public abstract Builder tag(String tag);
 

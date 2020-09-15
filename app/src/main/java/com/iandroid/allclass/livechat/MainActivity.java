@@ -12,7 +12,10 @@ import com.iandroid.allclass.lib_livechat.api.Config;
 import com.iandroid.allclass.lib_livechat.api.RoomChat;
 import com.iandroid.allclass.lib_livechat.api.StateChat;
 import com.iandroid.allclass.lib_livechat.base.ISocketEventHandler;
+import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
+import com.iandroid.allclass.lib_livechat.bean.ConversationItem;
 import com.iandroid.allclass.lib_livechat.exception.LoginException;
+import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +24,14 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-public class MainActivity extends AppCompatActivity implements ISocketEventHandler {
+public class MainActivity extends AppCompatActivity implements ISocketEventHandler , IStateKeyCallBack {
     private UserInfo loginInfo;
     private String tag = "lang_socket";
     private List<RoomInfo> roomInfoList;
     private String userinfo = "{\n" +
             "\t\"pfid\": 1018462,\n" +
             "\t\"pretty_id\": \"1018462\",\n" +
-            "\t\"access_token\": \"197206256dabcdb942e12aefc6ae9d9e\",\n" +
+            "\t\"access_token\": \"d23eb0f4ee40a7feaa26dd7315ec0ea8\",\n" +
             "\t\"headimg\": \"http:\\/\\/blob.ufile.ucloud.com.cn\\/7b8ac86b2fa9a436841137768f2234c3e80ff5b8f675c6aa7d2f6eca7661dc22200410152004.jpg\",\n" +
             "\t\"nickname\": \"蚕.丞相\",\n" +
             "\t\"sex\": 1,\n" +
@@ -126,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
                     .pfid(loginInfo.pfid)
                     .platform("android")
                     .userType("user")
+                    .stateKeyCallBack(this)
                     .token(loginInfo.access_token)
                     .tag(tag)
                     .hosts(Arrays.asList("https://state-1.lv-show.com/state",
@@ -142,6 +146,21 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
         Log.d(tag, "登出状态机");
         StateChat.logout();
         if (roomChat != null) roomChat.logoutRoom();
+    }
+
+    @Override
+    public void conversationLoadSuccess() {
+
+    }
+
+    @Override
+    public void onReceiveChat(ConversationItem conversationItem) {
+
+    }
+
+    @Override
+    public void updateUnreadMsgNum(String pfid, int num) {
+
     }
 
     private RoomChat roomChat;
