@@ -131,7 +131,7 @@ public class ConversationManager {
         }
     }
 
-    private int getTotalUnreadMsgNum() {
+    public int getTotalUnreadMsgNum() {
         int total = 0;
         for (ConversationItem item : conversationItemList) {
             if (item != null) {

@@ -40,41 +40,27 @@ public class ConversationGetter {
         nextOfficalConversationIndex = 0;
         nextUserConversationIndex = 0;
         return Observable.intervalRange(1, maxRetryTime, 0, 3, TimeUnit.SECONDS)
-                .takeWhile(new Predicate<Long>() {
-                    @Override
-                    public boolean test(Long aLong) throws Exception {
-                        return !isEndOfConversation();
-                    }
+                .takeWhile(aLong -> !isEndOfConversation())
+                .doFinally(() -> {
+                    Log.d("lang_socket", "[conversation]Request finally");
+                    StateChat.getInstance().conversationLoadSuccess();
                 })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.d("lang_socket", "[conversation]Request finally");
-                        StateChat.getInstance().conversationLoadSuccess();
-                    }
-                })
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long integer) throws Exception {
-                        if (curOfficalConversationIndex <= nextOfficalConversationIndex)
-                            StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
-                                    getConversationRequestParam(nextOfficalConversationIndex,
-                                            pagesize,
-                                            SocketUtils.transactionId(String.valueOf(nextOfficalConversationIndex) + "_")));
+                .subscribe(integer -> {
+                    if (curOfficalConversationIndex <= nextOfficalConversationIndex)
+                        StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
+                                getConversationRequestParam(nextOfficalConversationIndex,
+                                        pagesize,
+                                        SocketUtils.transactionId(String.valueOf(nextOfficalConversationIndex) + "_")));
 
-                        if (curUserConversationIndex <= nextUserConversationIndex) {
-                            StateChat.getInstance().send(SocketEvent.EVENT_C2S_OFFICIAL_ULIST,
-                                    getConversationRequestParam(nextUserConversationIndex,
-                                            pagesize,
-                                            SocketUtils.transactionId(String.valueOf(nextUserConversationIndex) + "_")));
-
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    if (curUserConversationIndex <= nextUserConversationIndex) {
+                        StateChat.getInstance().send(SocketEvent.EVENT_C2S_OFFICIAL_ULIST,
+                                getConversationRequestParam(nextUserConversationIndex,
+                                        pagesize,
+                                        SocketUtils.transactionId(String.valueOf(nextUserConversationIndex) + "_")));
 
                     }
+                }, throwable -> {
+
                 });
     }
 

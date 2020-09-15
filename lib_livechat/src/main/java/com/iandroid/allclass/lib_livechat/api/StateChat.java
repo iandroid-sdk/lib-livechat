@@ -63,7 +63,10 @@ public class StateChat implements ISocketEventHandler {
     }
 
     public void conversationLoadSuccess() {
-        if (iStateKeyCallBack != null) iStateKeyCallBack.conversationLoadSuccess();
+        if (iStateKeyCallBack != null) {
+            iStateKeyCallBack.conversationLoadSuccess();
+            iStateKeyCallBack.updateUnreadMsgNum(null, ConversationManager.getInstance().getTotalUnreadMsgNum());
+        }
     }
     /**
      * 缓存当前进入的直播间信息
