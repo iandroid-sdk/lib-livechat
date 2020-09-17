@@ -84,22 +84,21 @@ public class ConversationManager {
         conversationItem.setPfid(conversationSaidReponse.getPfid());
 
         int index = conversationItemList.indexOf(conversationItem);
-        boolean isNeedAdd = false;
+        boolean isNeedAdd = true;
 
         if (index >= 0) {
             conversationItem = conversationItemList.get(index);
-            isNeedAdd = true;
+            isNeedAdd = false;
         }
         conversationItem.setContent(conversationSaidReponse.getContent());
         conversationItem.setIndex(conversationSaidReponse.getIndex());
         conversationItem.setUnread(conversationSaidReponse.getUnread());
         conversationItem.setTs(conversationSaidReponse.getTs());
         conversationItem.parse();
-        if (isNeedAdd) {
 
+        if (isNeedAdd) {
             conversationItemList.add(conversationItem);
         }
-
         Collections.sort(conversationItemList, comparator);
 
         if (iStateKeyCallBack != null) {
