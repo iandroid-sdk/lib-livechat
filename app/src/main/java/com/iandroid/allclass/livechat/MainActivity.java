@@ -163,6 +163,11 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
 
     }
 
+    @Override
+    public void delConversation(ConversationItem conversationItem) {
+
+    }
+
     private RoomChat roomChat;
 
     private void logoutRoom() {
