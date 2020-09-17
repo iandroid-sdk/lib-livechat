@@ -59,6 +59,22 @@ public class ConversationManager {
         Collections.sort(conversationItemList, comparator);
     }
 
+    public void delConversation(ConversationItem item) {
+        if (item == null) return;
+        //清除未读状态
+        clearUnreadMsg(item);
+        //服务器删除
+        String transcationId = BaseSocket.genChatTransactionId(SocketEvent.IM_HEAD_DEL);
+        if (StateChat.getInstance().send(SocketEvent.EVENT_C2S_DELALL,
+                genDelAll(item.getPfid(), transcationId))) {
+            conversationItemList.remove(item);
+        }
+        //通知UI删除
+        if (StateChat.getiStateKeyCallBack() != null) {
+            StateChat.getiStateKeyCallBack().delConversation(item);
+        }
+    }
+
     public void updateConversationOnSaid(ConversationSaidReponse conversationSaidReponse,
                                          IStateKeyCallBack iStateKeyCallBack) {
         if (conversationSaidReponse == null || TextUtils.isEmpty(conversationSaidReponse.getPfid()))
@@ -124,12 +140,19 @@ public class ConversationManager {
 
     private void resetConversationUnreadInfoByItem(ConversationItem conversationItem) {
         if (conversationItem == null) return;
+        boolean isNeedUpdate = false;
         for (ConversationItem item : conversationItemList) {
+
             if (item != null
                     && item.equals(conversationItem)
                     && item.getUnread() > 0) {
                 item.setUnread(0);
+                isNeedUpdate = true;
             }
+        }
+
+        if (isNeedUpdate && StateChat.getiStateKeyCallBack() != null) {
+            StateChat.getiStateKeyCallBack().updateUnreadMsgNum(null, getTotalUnreadMsgNum());
         }
     }
 
@@ -165,6 +188,18 @@ public class ConversationManager {
             obj.put("sid", sid);
             if (!TextUtils.isEmpty(index))
                 obj.put("index", index);
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj = null;
+        }
+        return obj;
+    }
+
+    public static JSONObject genDelAll(String pfid, String sid) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("subject", pfid);
+            obj.put("sid", sid);
         } catch (Exception e) {
             e.printStackTrace();
             obj = null;

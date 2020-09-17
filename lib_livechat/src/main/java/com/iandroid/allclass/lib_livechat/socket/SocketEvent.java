@@ -23,6 +23,7 @@ public class SocketEvent {
     public static final String EVENT_C2S_OFFICIAL_ULIST = "pmsg/v1/ulist_official";
     public static final String EVENT_C2S_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
     public static final String EVENT_C2S_READ = "pmsg/v1/read";
+    public static final String EVENT_C2S_DELALL = "pmsg/v1/delall";
 
     //room C2S
     public static final String EVENT_C2S_CHAT_MSG = "msg";
@@ -33,6 +34,7 @@ public class SocketEvent {
 
     //msg tag
     public static final String IM_HEAD_READ = "read";
+    public static final String IM_HEAD_DEL = "del";
 
     // state
     public enum enmUserState {

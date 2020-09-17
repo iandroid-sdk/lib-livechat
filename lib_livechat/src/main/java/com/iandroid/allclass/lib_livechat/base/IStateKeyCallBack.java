@@ -16,7 +16,7 @@ public interface IStateKeyCallBack {
     /**
      * 收到聊天消息
      */
-    public void onReceiveChat(ConversationItem conversationItem );
+    public void onReceiveChat(ConversationItem conversationItem);
 
 
     /**
@@ -25,4 +25,10 @@ public interface IStateKeyCallBack {
      * @param num，未读消息数
      */
     public void updateUnreadMsgNum(String pfid, int num);
+
+    /**
+     * 删除会话
+     * @param conversationItem
+     */
+    public void delConversation(ConversationItem conversationItem);
 }

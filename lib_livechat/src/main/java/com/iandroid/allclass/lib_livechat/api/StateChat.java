@@ -129,6 +129,10 @@ public class StateChat implements ISocketEventHandler {
         stateChatPresenter = ChatManager.getStateChat(this);
     }
 
+    public static IStateKeyCallBack getiStateKeyCallBack() {
+        return getInstance().iStateKeyCallBack;
+    }
+
     private static StateChatPresenter getStateChatPresenter() {
         return getInstance().stateChatPresenter;
     }
