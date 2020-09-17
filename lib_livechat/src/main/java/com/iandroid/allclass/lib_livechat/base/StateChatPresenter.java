@@ -59,11 +59,15 @@ public class StateChatPresenter extends ChatManager {
             StateChat.stateChange(SocketEvent.enmUserState.enmInApp,
                     SocketEvent.enmStateAction.enmActionNull,
                     null);
-            //获取私信回话列表（官方&非官方）
-            mDisposable.add(ConversationGetter.getInstance().conversationRequest());
+            fetchAllConversation();
         }
     }
 
+    public void fetchAllConversation() {
+        //获取私信回话列表（官方&非官方）
+        if (mDisposable != null)
+            mDisposable.add(ConversationGetter.getInstance().conversationRequest());
+    }
     /**
      * 用户状态更新
      *

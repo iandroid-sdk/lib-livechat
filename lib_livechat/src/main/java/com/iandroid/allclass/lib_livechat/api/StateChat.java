@@ -37,8 +37,11 @@ public class StateChat implements ISocketEventHandler {
      * 登出
      */
     public static void logout() {
+        ConversationManager.getInstance().clearData();
         stateChange(SocketEvent.enmUserState.enmExit, SocketEvent.enmStateAction.enmActionNull, null);
         getStateChatPresenter().logout();
+        if (getInstance().iStateKeyCallBack != null)
+            getInstance().iStateKeyCallBack.logout();
     }
 
     @Override
@@ -75,6 +78,11 @@ public class StateChat implements ISocketEventHandler {
      */
     public static void setRoomConfig(Config roomConfig) {
         getInstance().roomConfig = roomConfig;
+    }
+
+    public void fetchAllConversation() {
+        if (stateChatPresenter != null)
+            stateChatPresenter.fetchAllConversation();
     }
 
     /**

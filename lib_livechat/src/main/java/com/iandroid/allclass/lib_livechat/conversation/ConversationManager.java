@@ -36,6 +36,17 @@ public class ConversationManager {
         return ConversationManager.LazyHolder.sInstance;
     }
 
+    public void clearData(){
+        if(conversationItemList != null)conversationItemList.clear();
+    }
+    /**
+     * 获取私信会话列表
+     */
+    public void fetchAllConversation() {
+        clearData();
+        StateChat.getInstance().fetchAllConversation();
+    }
+
     public List<ConversationItem> getConversationItemList() {
         return conversationItemList;
     }
@@ -151,6 +162,7 @@ public class ConversationManager {
         }
 
         if (isNeedUpdate && StateChat.getiStateKeyCallBack() != null) {
+            StateChat.getiStateKeyCallBack().updateUnreadMsgNum(conversationItem, conversationItem.getUnread());
             StateChat.getiStateKeyCallBack().updateUnreadMsgNum(null, getTotalUnreadMsgNum());
         }
     }

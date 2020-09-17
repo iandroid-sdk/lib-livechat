@@ -9,6 +9,10 @@ import com.iandroid.allclass.lib_livechat.bean.ConversationItem;
  */
 public interface IStateKeyCallBack {
     /**
+     * 登出
+     */
+    public void logout();
+    /**
      * 私信回话加载完成
      */
     public void conversationLoadSuccess();
@@ -21,10 +25,10 @@ public interface IStateKeyCallBack {
 
     /**
      * 未读消息更新
-     * @param pfid,如果pfid为空，表示所有未读消息数，否则表示指定用户的未读消息数
+     * @param conversationItem,如果为空，表示所有未读消息数，否则表示指定用户的未读消息数
      * @param num，未读消息数
      */
-    public void updateUnreadMsgNum(String pfid, int num);
+    public void updateUnreadMsgNum(ConversationItem conversationItem, int num);
 
     /**
      * 删除会话

@@ -142,7 +142,8 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
         }
     }
 
-    private void logout() {
+    @Override
+    public void logout() {
         Log.d(tag, "登出状态机");
         StateChat.logout();
         if (roomChat != null) roomChat.logoutRoom();
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
     }
 
     @Override
-    public void updateUnreadMsgNum(String pfid, int num) {
+    public void updateUnreadMsgNum(ConversationItem conversationItem, int num) {
 
     }
 
