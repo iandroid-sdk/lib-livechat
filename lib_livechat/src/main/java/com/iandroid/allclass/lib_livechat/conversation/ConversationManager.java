@@ -137,6 +137,32 @@ public class ConversationManager {
     }
 
     /**
+     * 获取用户信息
+     *
+     * @param pfid
+     * @param <T>
+     * @return
+     */
+    public <T> T getUserInfo(String pfid) {
+        if (TextUtils.isEmpty(pfid)) return null;
+        T userInfo = null;
+        for (ConversationItem item : conversationItemList) {
+            if (item != null
+                    && !TextUtils.isEmpty(item.getPfid())
+                    && item.getPfid().equals(pfid)
+                    && item.getUser_info() != null) {
+                userInfo = (T) item.getUser_info();
+                break;
+            }
+        }
+        if (userInfo == null && StateChat.getiStateKeyCallBack() != null) {
+            StateChat.getiStateKeyCallBack().queryUserInfo(pfid);
+        }
+
+        return userInfo;
+    }
+
+    /**
      * 清除指定用户的未读消息
      */
     public void clearUnreadMsg(ConversationItem conversationItem) {
@@ -152,7 +178,6 @@ public class ConversationManager {
         if (conversationItem == null) return;
         boolean isNeedUpdate = false;
         for (ConversationItem item : conversationItemList) {
-
             if (item != null
                     && item.equals(conversationItem)
                     && item.getUnread() > 0) {

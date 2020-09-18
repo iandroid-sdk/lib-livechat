@@ -35,4 +35,10 @@ public interface IStateKeyCallBack {
      * @param conversationItem
      */
     public void delConversation(ConversationItem conversationItem);
+
+    /**
+     * 查询用户信息
+     * @param pifd
+     */
+    public void queryUserInfo(String pifd);
 }

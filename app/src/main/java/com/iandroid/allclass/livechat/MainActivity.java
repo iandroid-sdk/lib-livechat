@@ -169,6 +169,11 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
 
     }
 
+    @Override
+    public void queryUserInfo(String pifd) {
+
+    }
+
     private RoomChat roomChat;
 
     private void logoutRoom() {

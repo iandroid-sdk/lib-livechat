@@ -4,7 +4,7 @@ package com.iandroid.allclass.lib_livechat.bean;
  * created by wangkm
  * on 2020/9/18.
  */
-public class ChatItem {
+public class ChatItem<T> {
     private String content;
     private long ts;
     private String from;
@@ -14,6 +14,15 @@ public class ChatItem {
     private String index;
     private int ugid;
     private int uglv;
+    private T user_info = null;//用户详情信息，比如昵称、头像等
+
+    public T getUser_info() {
+        return user_info;
+    }
+
+    public void setUser_info(T user_info) {
+        this.user_info = user_info;
+    }
 
     public String getContent() {
         return content;
