@@ -6,5 +6,7 @@ package com.iandroid.allclass.lib_livechat.bean;
  */
 public class ChatMsgType {
     public static final int TEXT = 0;//聊天内容为文字
-    public static final int IMG_LINK = 2;//图文[上下布局]
+    public static final int IMG_TEXT_LINK = 2;//图文[上下布局]
+    public static final int IMG = 3;//图
+
 }
