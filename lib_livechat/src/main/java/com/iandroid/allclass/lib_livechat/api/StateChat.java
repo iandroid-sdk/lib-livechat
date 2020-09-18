@@ -1,14 +1,22 @@
 package com.iandroid.allclass.lib_livechat.api;
 
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.iandroid.allclass.lib_livechat.base.ChatManager;
 import com.iandroid.allclass.lib_livechat.base.ISocketEventHandler;
 import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
 import com.iandroid.allclass.lib_livechat.base.StateChatPresenter;
+import com.iandroid.allclass.lib_livechat.bean.ChatSessionEntity;
 import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
+import com.iandroid.allclass.lib_livechat.conversation.ChatSession;
 import com.iandroid.allclass.lib_livechat.conversation.ConversationManager;
 import com.iandroid.allclass.lib_livechat.exception.LoginException;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
+
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * created by wangkm
@@ -20,6 +28,7 @@ public class StateChat implements ISocketEventHandler {
     private Config roomConfig;//当前所在直播间的配置信息
     private ISocketEventHandler iSocketEventHandler;
     private IStateKeyCallBack iStateKeyCallBack;
+    private Map<String, WeakReference<ChatSession>> chatSessionMap;
     /**
      * 登录
      *
@@ -51,6 +60,9 @@ public class StateChat implements ISocketEventHandler {
             case SocketEvent.EVENT_PRIVATECHAT_SAID:
                 eventData = JSON.parseObject(original[0].toString(), ConversationSaidReponse.class);
                 break;
+            case SocketEvent.EVENT_C2S_SINGLELIST:
+                eventData = JSON.parseObject(original[0].toString(), ChatSessionEntity.class);
+                break;
         }
         return eventData;
     }
@@ -61,6 +73,11 @@ public class StateChat implements ISocketEventHandler {
             case SocketEvent.EVENT_PRIVATECHAT_SAID:
                 if (eventData != null && eventData instanceof ConversationSaidReponse)
                     ConversationManager.getInstance().updateConversationOnSaid((ConversationSaidReponse) eventData, iStateKeyCallBack);
+                break;
+            case SocketEvent.EVENT_C2S_SINGLELIST:
+                if (eventData != null && eventData instanceof ChatSessionEntity) {
+                    chatListResponse((ChatSessionEntity) eventData);
+                }
                 break;
         }
     }
@@ -143,5 +160,31 @@ public class StateChat implements ISocketEventHandler {
 
     private static StateChatPresenter getStateChatPresenter() {
         return getInstance().stateChatPresenter;
+    }
+
+    public void addChatSession(String pfid, ChatSession chatSession) {
+        if (chatSessionMap == null) chatSessionMap = new HashMap<>();
+        chatSessionMap.put(pfid, new WeakReference<>(chatSession));
+    }
+
+    public void removeChatSession(String pfid) {
+        if (chatSessionMap != null
+                && chatSessionMap.containsKey(pfid)
+                && !TextUtils.isEmpty(pfid))
+            chatSessionMap.remove(pfid);
+    }
+
+    public void chatListResponse(ChatSessionEntity chatSessionEntity) {
+        if (chatSessionMap == null) return;
+
+        String tag = chatSessionEntity.getSid();
+        if (TextUtils.isEmpty(tag) || tag.indexOf("_") == -1) return;
+
+        String pfid = tag.substring(tag.indexOf("_"));
+        if (!chatSessionMap.containsKey(pfid)) {
+            WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
+            if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
+            chatSessionWeakReference.get().chatListResponse(chatSessionEntity);
+        }
     }
 }

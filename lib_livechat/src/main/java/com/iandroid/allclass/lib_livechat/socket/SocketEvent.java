@@ -24,6 +24,7 @@ public class SocketEvent {
     public static final String EVENT_C2S_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
     public static final String EVENT_C2S_READ = "pmsg/v1/read";
     public static final String EVENT_C2S_DELALL = "pmsg/v1/delall";
+    public static final String EVENT_C2S_SINGLELIST = "pmsg/v1/msglist";
 
     //room C2S
     public static final String EVENT_C2S_CHAT_MSG = "msg";
@@ -31,10 +32,14 @@ public class SocketEvent {
     //S2C
     public static final String EVENT_PRIVATECHAT_OFFICIAL_ULIST = "pmsg/v1/ulist_official";
     public static final String EVENT_PRIVATECHAT_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
+    public static final String EVENT_PRIVATECAHT_MLIST = "pmsg/v1/msglist";
 
     //msg tag
     public static final String IM_HEAD_READ = "read";
     public static final String IM_HEAD_DEL = "del";
+    public static final String IM_HEAD_SINGLE_LIST = "single";
+
+    public static final int PAGE_SIZE = 40;
 
     // state
     public enum enmUserState {
