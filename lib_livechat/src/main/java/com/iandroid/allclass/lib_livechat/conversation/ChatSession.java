@@ -31,7 +31,7 @@ public class ChatSession {
     }
 
     public boolean fetchChatList(String index) {
-        String transactionId = SocketUtils.transactionId(SocketEvent.IM_HEAD_SINGLE_LIST + "_" + pfid);
+        String transactionId = SocketUtils.transactionId(SocketEvent.IM_HEAD_SINGLE_LIST);
         return StateChat.getInstance().send(SocketEvent.EVENT_C2S_SINGLELIST,
                 genChatMsgList(pfid, transactionId, index, -1, SocketEvent.PAGE_SIZE));
     }

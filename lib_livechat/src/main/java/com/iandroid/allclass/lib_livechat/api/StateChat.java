@@ -177,11 +177,8 @@ public class StateChat implements ISocketEventHandler {
     public void chatListResponse(ChatSessionEntity chatSessionEntity) {
         if (chatSessionMap == null) return;
 
-        String tag = chatSessionEntity.getSid();
-        if (TextUtils.isEmpty(tag) || tag.indexOf("_") == -1) return;
-
-        String pfid = tag.substring(tag.indexOf("_"));
-        if (!chatSessionMap.containsKey(pfid)) {
+        String pfid = chatSessionEntity.getSubject();
+        if (!TextUtils.isEmpty(pfid) && chatSessionMap.containsKey(pfid)) {
             WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
             if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
             chatSessionWeakReference.get().chatListResponse(chatSessionEntity);
