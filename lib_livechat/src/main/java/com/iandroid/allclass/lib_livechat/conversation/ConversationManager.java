@@ -124,7 +124,7 @@ public class ConversationManager {
      * @param pfid
      * @param userInfo
      */
-    public void updateUserInfo(String pfid, Object userInfo) {
+    public <T> void updateUserInfo(String pfid, T userInfo) {
         if (TextUtils.isEmpty(pfid) || userInfo == null) return;
 
         for (ConversationItem item : conversationItemList) {

@@ -12,21 +12,21 @@ import androidx.annotation.Nullable;
  * created by wangkm
  * on 2020/8/18.
  */
-public class ConversationItem {
+public class ConversationItem<T> {
     private String index;
     private String pfid;
     private long ts;
     private String content;
     private int unread;
     private int user_flag = 0;
-    private Object user_info = null;//用户详情信息，比如昵称、头像等
+    private T user_info = null;//用户详情信息，比如昵称、头像等
     protected ConversationContent real_content;
 
-    public Object getUser_info() {
+    public T getUser_info() {
         return user_info;
     }
 
-    public void setUser_info(Object user_info) {
+    public void setUser_info(T user_info) {
         this.user_info = user_info;
     }
 
