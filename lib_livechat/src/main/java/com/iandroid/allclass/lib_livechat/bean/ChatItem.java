@@ -1,5 +1,8 @@
 package com.iandroid.allclass.lib_livechat.bean;
 
+import com.alibaba.fastjson.JSON;
+import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
+
 /**
  * created by wangkm
  * on 2020/9/18.
@@ -14,6 +17,35 @@ public class ChatItem<T> {
     private String index;
     private int ugid;
     private int uglv;
+    private int msgType = ChatMsgType.TEXT;
+    protected ConversationContent real_content;
+
+    public void parse() {
+        try {
+            if (SocketUtils.isJson(getContent())) {
+                real_content = JSON.parseObject(getContent(), ConversationContent.class);
+            }
+        } catch (Exception e) {
+            real_content = null;
+        }
+    }
+
+    public ConversationContent getReal_content() {
+        return real_content;
+    }
+
+    public void setReal_content(ConversationContent real_content) {
+        this.real_content = real_content;
+    }
+
+    public int getMsgType() {
+        return real_content == null ? msgType : real_content.getMsg_type();
+    }
+
+    public void setMsgType(int msgType) {
+        this.msgType = msgType;
+    }
+
     private T user_info = null;//用户详情信息，比如昵称、头像等
 
     public T getUser_info() {
