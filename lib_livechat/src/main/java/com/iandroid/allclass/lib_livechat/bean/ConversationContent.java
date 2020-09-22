@@ -8,8 +8,17 @@ public class ConversationContent {
     private String imgurl;//红包的用头像
     private String title;
     private int type;
+    private String liveurl;
     private int msg_type = ChatMsgType.TEXT;   //图文
     private String content;//红包的话，就是祝福语；系统提示的描述文字
+
+    public String getLiveurl() {
+        return liveurl;
+    }
+
+    public void setLiveurl(String liveurl) {
+        this.liveurl = liveurl;
+    }
 
     public String getImgurl() {
         return imgurl;
