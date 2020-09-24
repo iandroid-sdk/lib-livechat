@@ -8,6 +8,7 @@ import com.iandroid.allclass.lib_livechat.bean.ConversationItem;
 import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
 import com.iandroid.allclass.lib_livechat.socket.BaseSocket;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
+import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
 
 import org.json.JSONObject;
 
@@ -74,7 +75,7 @@ public class ConversationManager {
         //清除未读状态
         clearUnreadMsg(item);
         //服务器删除
-        String transcationId = BaseSocket.genChatTransactionId(SocketEvent.IM_HEAD_DEL);
+        String transcationId = SocketUtils.transactionId(SocketEvent.IM_HEAD_DEL);
         if (StateChat.getInstance().send(SocketEvent.EVENT_C2S_DELALL,
                 genDelAll(item.getPfid(), transcationId))) {
             conversationItemList.remove(item);
@@ -166,7 +167,7 @@ public class ConversationManager {
     public void clearUnreadMsg(ConversationItem conversationItem) {
         if (conversationItem == null) return;
         boolean code = StateChat.getInstance().send(SocketEvent.EVENT_C2S_READ,
-                genImRead(conversationItem.getPfid(), BaseSocket.genChatTransactionId(SocketEvent.IM_HEAD_READ), null));
+                genImRead(conversationItem.getPfid(), SocketUtils.transactionId(SocketEvent.IM_HEAD_READ), null));
         if (code) {
             resetConversationUnreadInfoByItem(conversationItem);
         }
@@ -180,6 +181,7 @@ public class ConversationManager {
                     && item.equals(conversationItem)
                     && item.getUnread() > 0) {
                 item.setUnread(0);
+                conversationItem.setUnread(0);
                 isNeedUpdate = true;
             }
         }
