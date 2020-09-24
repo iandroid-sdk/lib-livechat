@@ -60,6 +60,7 @@ public class ChatSession {
             ChatItem chatItem = new ChatItem();
             chatItem.setIndex(conversationSaidReponse.getIndex());
             chatItem.setSubject(conversationSaidReponse.getPfid());
+            chatItem.setFrom(conversationSaidReponse.getPfid());
             chatItem.setUser_info(ConversationManager.getInstance().getUserInfo(conversationSaidReponse.getPfid()));
             chatItem.setContent(conversationSaidReponse.getContent());
             chatItem.setTs(conversationSaidReponse.getTs());
