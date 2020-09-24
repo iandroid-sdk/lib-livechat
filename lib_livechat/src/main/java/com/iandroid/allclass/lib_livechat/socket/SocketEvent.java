@@ -5,6 +5,8 @@ package com.iandroid.allclass.lib_livechat.socket;
  * on 2020/8/6.
  */
 public class SocketEvent {
+    //服务器消息状态
+    public static final int STATUS_DEL = -1;
     //socketEvent
     public static final String EVENT_AUTHENTICATED = "authenticated";
     public static final String EVENT_UNAUTHENTICATED = "unauthorized";
@@ -18,13 +20,14 @@ public class SocketEvent {
     public static final String EVENT_C2S_STATUS = "status";
 
     //私信 C2S
-    public static final String EVENT_PRIVATECHAT_SAY = "pmsg/v1/say";
+    public static final String EVENT_C2S_SAY = "pmsg/v1/say";
     public static final String EVENT_PRIVATECHAT_SAID = "pmsg/v1/said";
     public static final String EVENT_C2S_OFFICIAL_ULIST = "pmsg/v1/ulist_official";
     public static final String EVENT_C2S_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
     public static final String EVENT_C2S_READ = "pmsg/v1/read";
     public static final String EVENT_C2S_DELALL = "pmsg/v1/delall";
     public static final String EVENT_C2S_SINGLELIST = "pmsg/v1/msglist";
+    public static final String EVENT_C2S_DELONE = "pmsg/v1/del";
 
     //room C2S
     public static final String EVENT_C2S_CHAT_MSG = "msg";
@@ -33,6 +36,7 @@ public class SocketEvent {
     public static final String EVENT_PRIVATECHAT_OFFICIAL_ULIST = "pmsg/v1/ulist_official";
     public static final String EVENT_PRIVATECHAT_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
     public static final String EVENT_PRIVATECAHT_MLIST = "pmsg/v1/msglist";
+    public static final String EVENT_PRIVATECHAT_SAY = "pmsg/v1/say";
 
     //msg tag
     public static final String IM_HEAD_READ = "read";
@@ -41,6 +45,7 @@ public class SocketEvent {
 
     public static final int PAGE_SIZE = 40;
 
+    public static final int CODE_OK = 0;
     // state
     public enum enmUserState {
         enmInApp(1),

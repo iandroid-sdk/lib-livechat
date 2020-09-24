@@ -67,7 +67,6 @@ public class ConversationManager {
                 conversationItemList.add(item);
             }
         }
-        Collections.sort(conversationItemList, comparator);
     }
 
     public void delConversation(ConversationItem item) {
@@ -110,7 +109,6 @@ public class ConversationManager {
         if (isNeedAdd) {
             conversationItemList.add(conversationItem);
         }
-        Collections.sort(conversationItemList, comparator);
 
         if (iStateKeyCallBack != null) {
             iStateKeyCallBack.onReceiveChat(conversationItem);
@@ -201,19 +199,6 @@ public class ConversationManager {
         }
         return total;
     }
-
-    private Comparator comparator = (obj1, obj2) -> {
-        ConversationItem s1 = (ConversationItem) obj1;
-        ConversationItem s2 = (ConversationItem) obj2;
-
-        if (s1.getTs() > s2.getTs()) {
-            return -1;
-        } else if (s1.getTs() < s2.getTs()) {
-            return 1;
-        } else {
-            return 0;
-        }
-    };
 
     public static JSONObject genImRead(String contact_pfid,
                                        String sid,

@@ -50,13 +50,13 @@ public class ConversationGetter {
                         StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
                                 getConversationRequestParam(nextOfficalConversationIndex,
                                         pagesize,
-                                        SocketUtils.transactionId(String.valueOf(nextOfficalConversationIndex) + "_")));
+                                        SocketUtils.transactionId(String.valueOf(nextOfficalConversationIndex))));
 
                     if (curUserConversationIndex <= nextUserConversationIndex) {
                         StateChat.getInstance().send(SocketEvent.EVENT_C2S_OFFICIAL_ULIST,
                                 getConversationRequestParam(nextUserConversationIndex,
                                         pagesize,
-                                        SocketUtils.transactionId(String.valueOf(nextUserConversationIndex) + "_")));
+                                        SocketUtils.transactionId(String.valueOf(nextUserConversationIndex))));
 
                     }
                 }, throwable -> {

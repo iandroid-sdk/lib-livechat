@@ -7,6 +7,8 @@ import com.iandroid.allclass.lib_livechat.base.ChatManager;
 import com.iandroid.allclass.lib_livechat.base.ISocketEventHandler;
 import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
 import com.iandroid.allclass.lib_livechat.base.StateChatPresenter;
+import com.iandroid.allclass.lib_livechat.bean.ChatItem;
+import com.iandroid.allclass.lib_livechat.bean.ChatSayResponse;
 import com.iandroid.allclass.lib_livechat.bean.ChatSessionEntity;
 import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
 import com.iandroid.allclass.lib_livechat.conversation.ChatSession;
@@ -63,6 +65,9 @@ public class StateChat implements ISocketEventHandler {
             case SocketEvent.EVENT_C2S_SINGLELIST:
                 eventData = JSON.parseObject(original[0].toString(), ChatSessionEntity.class);
                 break;
+            case SocketEvent.EVENT_C2S_SAY:
+                eventData = JSON.parseObject(original[0].toString(), ChatSayResponse.class);
+                break;
         }
         return eventData;
     }
@@ -71,12 +76,20 @@ public class StateChat implements ISocketEventHandler {
     public void onReceiveMsg(String event, Object[] originalData, Object eventData) {
         switch (event) {
             case SocketEvent.EVENT_PRIVATECHAT_SAID:
-                if (eventData != null && eventData instanceof ConversationSaidReponse)
-                    ConversationManager.getInstance().updateConversationOnSaid((ConversationSaidReponse) eventData, iStateKeyCallBack);
+                if (eventData != null && eventData instanceof ConversationSaidReponse) {
+                    ConversationSaidReponse conversationSaidReponse = (ConversationSaidReponse) eventData;
+                    onSaid(conversationSaidReponse);
+                    ConversationManager.getInstance().updateConversationOnSaid(conversationSaidReponse, iStateKeyCallBack);
+                }
                 break;
             case SocketEvent.EVENT_C2S_SINGLELIST:
                 if (eventData != null && eventData instanceof ChatSessionEntity) {
                     chatListResponse((ChatSessionEntity) eventData);
+                }
+                break;
+            case SocketEvent.EVENT_C2S_SAY:
+                if (eventData != null && eventData instanceof ChatSayResponse) {
+                    chatSayResponse((ChatSayResponse) eventData);
                 }
                 break;
         }
@@ -174,6 +187,7 @@ public class StateChat implements ISocketEventHandler {
             chatSessionMap.remove(pfid);
     }
 
+    //获取聊天消息列表响应
     public void chatListResponse(ChatSessionEntity chatSessionEntity) {
         if (chatSessionMap == null) return;
 
@@ -182,6 +196,45 @@ public class StateChat implements ISocketEventHandler {
             WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
             if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
             chatSessionWeakReference.get().chatListResponse(chatSessionEntity);
+        }
+    }
+
+    //收到消息
+    public void onSaid(ConversationSaidReponse conversationSaidReponse) {
+        if (chatSessionMap == null) return;
+
+        String pfid = conversationSaidReponse.getPfid();
+        if (!TextUtils.isEmpty(pfid) && chatSessionMap.containsKey(pfid)) {
+            WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
+            if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
+            chatSessionWeakReference.get().onSaid(conversationSaidReponse);
+        }
+    }
+
+    //发送消息返回响应
+    public void chatSayResponse(ChatSayResponse chatSayResponse) {
+        if (chatSessionMap == null) return;
+
+        ChatItem chatItem = null;
+        String pfid = chatSayResponse.getSid().substring(0, chatSayResponse.getSid().indexOf("_"));
+        if (!TextUtils.isEmpty(pfid) && chatSessionMap.containsKey(pfid)) {
+            WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
+            if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
+            chatItem = chatSessionWeakReference.get().chatSayResponse(chatSayResponse);
+        }
+
+        //更新会话
+        if (!TextUtils.isEmpty(pfid)
+                && chatSayResponse.getRet_code() == SocketEvent.CODE_OK
+                && chatItem != null) {
+            if (chatSayResponse.getRet_code() == SocketEvent.CODE_OK) {
+                ConversationSaidReponse conversationSaidReponse = new ConversationSaidReponse();
+                conversationSaidReponse.setIndex(chatSayResponse.getIndex());
+                conversationSaidReponse.setPfid(pfid);
+                conversationSaidReponse.setTs(chatSayResponse.getCreateAt());
+                conversationSaidReponse.setContent(chatItem.getContent());
+                ConversationManager.getInstance().updateConversationOnSaid(conversationSaidReponse, iStateKeyCallBack);
+            }
         }
     }
 }

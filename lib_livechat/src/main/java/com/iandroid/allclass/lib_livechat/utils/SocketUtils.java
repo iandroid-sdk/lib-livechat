@@ -49,7 +49,7 @@ public class SocketUtils {
         sSid++;
         if (head == null)
             head = "";
-        return head + sSid;
+        return new StringBuffer(head).append("_").append(sSid).toString();
     }
 
     public static int toInt(String str, int defValue) {

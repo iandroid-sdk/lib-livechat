@@ -1,5 +1,7 @@
 package com.iandroid.allclass.lib_livechat.base;
 
+import com.iandroid.allclass.lib_livechat.bean.ChatItem;
+import com.iandroid.allclass.lib_livechat.bean.ChatSayResponse;
 import com.iandroid.allclass.lib_livechat.bean.ChatSessionEntity;
 
 /**
@@ -9,7 +11,20 @@ import com.iandroid.allclass.lib_livechat.bean.ChatSessionEntity;
  */
 public interface IChatSessionCallBack {
     /**
-     * 登出
+     * 聊天列表返回
      */
     public void chatListResponse(ChatSessionEntity chatSessionEntity);
+
+
+    /**
+     * 发送消息返回
+     */
+    public void chatSayResponse(ChatSayResponse chatSayResponse, ChatItem chatItem);
+
+    /**
+     * 收到聊天消息
+     * @param chatItem
+     */
+    public void onSaid(ChatItem chatItem);
+
 }

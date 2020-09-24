@@ -18,6 +18,10 @@ public class ChatItem<T> {
     private int ugid;
     private int uglv;
     private int msgType = ChatMsgType.TEXT;
+    //本地处理
+    private int client_state;//发送状态
+    private String sid;//发送消息的key
+
     protected ConversationContent real_content;
 
     public void parse() {
@@ -36,6 +40,22 @@ public class ChatItem<T> {
 
     public void setReal_content(ConversationContent real_content) {
         this.real_content = real_content;
+    }
+
+    public int getClient_state() {
+        return client_state;
+    }
+
+    public void setClient_state(int client_state) {
+        this.client_state = client_state;
+    }
+
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
     }
 
     public int getMsgType() {
