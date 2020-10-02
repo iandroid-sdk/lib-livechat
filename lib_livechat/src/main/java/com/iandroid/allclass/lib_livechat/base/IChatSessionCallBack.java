@@ -13,13 +13,13 @@ public interface IChatSessionCallBack {
     /**
      * 聊天列表返回
      */
-    public void chatListResponse(ChatSessionEntity chatSessionEntity);
+    public void onChatListResponse(ChatSessionEntity chatSessionEntity);
 
 
     /**
      * 发送消息返回
      */
-    public void chatSayResponse(ChatSayResponse chatSayResponse, ChatItem chatItem);
+    public void onChatSayResponse(ChatSayResponse chatSayResponse, ChatItem chatItem);
 
     /**
      * 收到聊天消息

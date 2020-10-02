@@ -1,7 +1,11 @@
 package com.iandroid.allclass.lib_livechat.bean;
 
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
+
+import androidx.annotation.Nullable;
 
 /**
  * created by wangkm
@@ -32,6 +36,21 @@ public class ChatItem<T> {
         } catch (Exception e) {
             real_content = null;
         }
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj != null && obj instanceof ChatItem){
+            ChatItem chatItem = (ChatItem)obj;
+            if(!TextUtils.isEmpty(chatItem.getIndex())
+                && !TextUtils.isEmpty(getIndex())){
+                return getIndex().equals(chatItem.getIndex());
+            }else if(!TextUtils.isEmpty(chatItem.getSid())
+                    && !TextUtils.isEmpty(getSid())){
+                return getSid().equals(chatItem.getSid());
+            }else return false;
+        }
+        return super.equals(obj);
     }
 
     public ConversationContent getReal_content() {

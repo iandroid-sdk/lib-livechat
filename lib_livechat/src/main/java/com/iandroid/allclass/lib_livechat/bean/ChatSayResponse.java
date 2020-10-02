@@ -7,6 +7,15 @@ package com.iandroid.allclass.lib_livechat.bean;
 public class ChatSayResponse extends BaseResponse{
     private long createAt;
     private String index;
+    private String to;
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
 
     public long getCreateAt() {
         return createAt;

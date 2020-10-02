@@ -195,7 +195,7 @@ public class StateChat implements ISocketEventHandler {
         if (!TextUtils.isEmpty(pfid) && chatSessionMap.containsKey(pfid)) {
             WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
             if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
-            chatSessionWeakReference.get().chatListResponse(chatSessionEntity);
+            chatSessionWeakReference.get().onChatListResponse(chatSessionEntity);
         }
     }
 
@@ -216,21 +216,21 @@ public class StateChat implements ISocketEventHandler {
         if (chatSessionMap == null) return;
 
         ChatItem chatItem = null;
-        String pfid = chatSayResponse.getSid().substring(0, chatSayResponse.getSid().indexOf("_"));
-        if (!TextUtils.isEmpty(pfid) && chatSessionMap.containsKey(pfid)) {
-            WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
+        String toPfid = chatSayResponse.getTo();
+        if (!TextUtils.isEmpty(toPfid) && chatSessionMap.containsKey(toPfid)) {
+            WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(toPfid);
             if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
-            chatItem = chatSessionWeakReference.get().chatSayResponse(chatSayResponse);
+            chatItem = chatSessionWeakReference.get().onChatSayResponse(chatSayResponse);
         }
 
         //更新会话
-        if (!TextUtils.isEmpty(pfid)
+        if (!TextUtils.isEmpty(toPfid)
                 && chatSayResponse.getRet_code() == SocketEvent.CODE_OK
                 && chatItem != null) {
             if (chatSayResponse.getRet_code() == SocketEvent.CODE_OK) {
                 ConversationSaidReponse conversationSaidReponse = new ConversationSaidReponse();
                 conversationSaidReponse.setIndex(chatSayResponse.getIndex());
-                conversationSaidReponse.setPfid(pfid);
+                conversationSaidReponse.setPfid(toPfid);
                 conversationSaidReponse.setTs(chatSayResponse.getCreateAt());
                 conversationSaidReponse.setContent(chatItem.getContent());
                 ConversationManager.getInstance().updateConversationOnSaid(conversationSaidReponse, iStateKeyCallBack);

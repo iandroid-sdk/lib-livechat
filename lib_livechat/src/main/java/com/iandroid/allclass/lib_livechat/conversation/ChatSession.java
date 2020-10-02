@@ -80,20 +80,24 @@ public class ChatSession {
                 genDelSingle(chatItem.getIndex(), transcationId));
     }
 
-    public ChatItem chatSayResponse(ChatSayResponse chatSayResponse) {
+    public ChatItem onChatSayResponse(ChatSayResponse chatSayResponse) {
         if (sendingMsg == null || chatSayResponse == null || !sendingMsg.containsKey(chatSayResponse.getSid())) {
             return null;
         }
 
         ChatItem chatItem = sendingMsg.remove(chatSayResponse.getSid());
-        if (iChatSessionCallBack != null)
-            iChatSessionCallBack.chatSayResponse(chatSayResponse, chatItem);
+        if (iChatSessionCallBack != null && chatItem != null) {
+            chatItem.setIndex(chatSayResponse.getIndex());
+            chatItem.setTs(chatSayResponse.getCreateAt());
+            chatItem.setSubject(chatSayResponse.getTo());
+            iChatSessionCallBack.onChatSayResponse(chatSayResponse, chatItem);
+        }
 
         return chatItem;
     }
 
-    public void chatListResponse(ChatSessionEntity chatSessionEntity) {
-        if (iChatSessionCallBack != null) iChatSessionCallBack.chatListResponse(chatSessionEntity);
+    public void onChatListResponse(ChatSessionEntity chatSessionEntity) {
+        if (iChatSessionCallBack != null) iChatSessionCallBack.onChatListResponse(chatSessionEntity);
     }
 
     private JSONObject genChatMsgList(String contact_pfid,
