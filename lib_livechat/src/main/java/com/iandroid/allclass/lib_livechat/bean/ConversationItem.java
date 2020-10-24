@@ -21,6 +21,15 @@ public class ConversationItem<T> {
     private int user_flag = 0;
     private T user_info = null;//用户详情信息，比如昵称、头像等
     protected ConversationContent real_content;
+    private boolean isContainer;
+
+    public boolean isContainer() {
+        return isContainer;
+    }
+
+    public void setContainer(boolean container) {
+        isContainer = container;
+    }
 
     public T getUser_info() {
         return user_info;

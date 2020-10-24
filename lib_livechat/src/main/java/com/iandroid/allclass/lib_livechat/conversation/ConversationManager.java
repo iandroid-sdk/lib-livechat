@@ -6,15 +6,12 @@ import com.iandroid.allclass.lib_livechat.api.StateChat;
 import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
 import com.iandroid.allclass.lib_livechat.bean.ConversationItem;
 import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
-import com.iandroid.allclass.lib_livechat.socket.BaseSocket;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -123,13 +120,14 @@ public class ConversationManager {
      * @param pfid
      * @param userInfo
      */
-    public <T> void updateUserInfo(String pfid, T userInfo) {
+    public <T> void updateUserInfo(String pfid, T userInfo, boolean isContainer) {
         if (TextUtils.isEmpty(pfid) || userInfo == null) return;
 
         for (ConversationItem item : conversationItemList) {
             if (item != null
                     && !TextUtils.isEmpty(item.getPfid())
                     && item.getPfid().equals(pfid)) {
+                item.setContainer(isContainer);
                 item.setUser_info(userInfo);
             }
         }
@@ -195,7 +193,7 @@ public class ConversationManager {
     public int getTotalUnreadMsgNum() {
         int total = 0;
         for (ConversationItem item : conversationItemList) {
-            if (item != null) {
+            if (item != null && !item.isContainer()) {
                 total += item.getUnread();
             }
         }
