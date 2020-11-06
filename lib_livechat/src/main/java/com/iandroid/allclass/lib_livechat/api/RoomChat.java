@@ -70,11 +70,11 @@ public class RoomChat {
      * @param data
      * @return
      */
-    public boolean sendToRoomChat(JSONObject data) {
+    public boolean sendToRoomSay(JSONObject data) {
         if (chatRoom == null || !chatRoom.isConnected()) {
             loginRoomRetry();
             return false;
-        } else return chatRoom.send(SocketEvent.EVENT_C2S_CHAT_MSG, data);
+        } else return chatRoom.send(SocketEvent.EVENT_C2S_CHAT_SAY, data);
     }
 
     /**

@@ -30,7 +30,7 @@ public class SocketEvent {
     public static final String EVENT_C2S_DELONE = "pmsg/v1/del";
 
     //room C2S
-    public static final String EVENT_C2S_CHAT_MSG = "msg";
+    public static final String EVENT_C2S_CHAT_SAY = "say";
 
     //S2C
     public static final String EVENT_PRIVATECHAT_OFFICIAL_ULIST = "pmsg/v1/ulist_official";
