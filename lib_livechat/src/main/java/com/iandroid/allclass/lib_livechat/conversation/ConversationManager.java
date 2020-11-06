@@ -171,6 +171,37 @@ public class ConversationManager {
         }
     }
 
+    public void clearUnreadMsg(String pfid) {
+        if (pfid == null) return;
+        boolean code = StateChat.getInstance().send(SocketEvent.EVENT_C2S_READ,
+                genImRead(pfid, SocketUtils.transactionId(SocketEvent.IM_HEAD_READ), null));
+        if (code) {
+            resetConversationUnreadInfoByPfid(pfid);
+        }
+    }
+    
+    private void resetConversationUnreadInfoByPfid(String pfid) {
+        if (pfid == null) return;
+        boolean isNeedUpdate = false;
+        ConversationItem conversationItem = null;
+        for (ConversationItem item : conversationItemList) {
+            if (item != null
+                    && pfid.equals(item.getPfid())
+                    && item.getUnread() > 0) {
+                conversationItem = item;
+                item.setUnread(0);
+                conversationItem.setUnread(0);
+                isNeedUpdate = true;
+            }
+        }
+
+        if (isNeedUpdate && StateChat.getiStateKeyCallBack() != null) {
+            if (conversationItem != null)
+                StateChat.getiStateKeyCallBack().updateUnreadMsgNum(conversationItem, conversationItem.getUnread());
+            StateChat.getiStateKeyCallBack().updateUnreadMsgNum(null, getTotalUnreadMsgNum());
+        }
+    }
+
     private void resetConversationUnreadInfoByItem(ConversationItem conversationItem) {
         if (conversationItem == null) return;
         boolean isNeedUpdate = false;
