@@ -84,4 +84,11 @@ public class SocketEvent {
             return acion;
         }
     }
+
+    public enum enmSocketStatus {
+        enmConnected,
+        enmConnectError,
+        enmAuthSuccess,
+        enmAuthFailed
+    }
 }

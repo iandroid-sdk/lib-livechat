@@ -1,6 +1,7 @@
 package com.iandroid.allclass.lib_livechat.base;
 
 import com.iandroid.allclass.lib_livechat.bean.ConversationItem;
+import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
 /**
  * created by wangkm
@@ -41,4 +42,10 @@ public interface IStateKeyCallBack {
      * @param pifd
      */
     public void queryUserInfo(String pifd);
+
+    /**
+     * 状态机状态回调
+     * @param status
+     */
+    public void statusCallback(SocketEvent.enmSocketStatus status);
 }

@@ -20,6 +20,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.socket.client.Socket;
+
 /**
  * created by wangkm
  * on 2020/8/18.
@@ -28,7 +30,6 @@ import java.util.Map;
 public class StateChat implements ISocketEventHandler {
     private StateChatPresenter stateChatPresenter;
     private Config roomConfig;//当前所在直播间的配置信息
-    private ISocketEventHandler iSocketEventHandler;
     private IStateKeyCallBack iStateKeyCallBack;
     private Map<String, WeakReference<ChatSession>> chatSessionMap;
     /**
@@ -38,7 +39,6 @@ public class StateChat implements ISocketEventHandler {
      * @throws LoginException
      */
     public static void login(Config config) throws LoginException {
-        getInstance().iSocketEventHandler = config.socketEventHandler();
         getInstance().iStateKeyCallBack = config.stateKeyCallBack();
 
         getStateChatPresenter().login(config);
@@ -91,6 +91,22 @@ public class StateChat implements ISocketEventHandler {
                 if (eventData != null && eventData instanceof ChatSayResponse) {
                     chatSayResponse((ChatSayResponse) eventData);
                 }
+                break;
+            case Socket.EVENT_CONNECT:
+                if (iStateKeyCallBack != null)
+                    iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmConnected);
+                break;
+            case Socket.EVENT_RECONNECT_ERROR:
+                if (iStateKeyCallBack != null)
+                    iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmConnectError);
+                break;
+            case SocketEvent.EVENT_AUTHENTICATED:
+                if (iStateKeyCallBack != null)
+                    iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmAuthSuccess);
+                break;
+            case SocketEvent.EVENT_UNAUTHENTICATED:
+                if (iStateKeyCallBack != null)
+                    iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmAuthFailed);
                 break;
         }
     }

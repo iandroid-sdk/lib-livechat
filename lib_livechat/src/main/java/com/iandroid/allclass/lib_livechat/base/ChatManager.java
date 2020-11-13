@@ -68,18 +68,12 @@ public abstract class ChatManager implements IEmitterCallBack, IBaseChatAction {
         mMsgReceiveSubject = PublishSubject.create();
         mDisposable = new CompositeDisposable();
         Disposable disposable = mMsgReceiveSubject.observeOn(Schedulers.computation())
-                .map(new Function<Object, Object>() {
-                    @Override
-                    public Object apply(@NonNull Object object) {
-                        SocketEventData socketEventData = (SocketEventData) object;
-                        socketEventData.setNextData(handleEventOnIOThread(socketEventData.getEvent(),
-                                socketEventData.getObjects()));
-                        return socketEventData;
-                    }
-                }).doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                    }
+                .map((Function<Object, Object>) object -> {
+                    SocketEventData socketEventData = (SocketEventData) object;
+                    socketEventData.setNextData(handleEventOnIOThread(socketEventData.getEvent(),
+                            socketEventData.getObjects()));
+                    return socketEventData;
+                }).doOnError(throwable -> {
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object object) {
