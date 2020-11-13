@@ -10,7 +10,10 @@ import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -37,6 +40,14 @@ public class BaseSocket {
         connect(config);
     }
 
+    public void reLogin() throws LoginException {
+        if (config == null || socket == null) return;
+        Log.d(TAG, "[reLogin]" + this.getClass().getSimpleName());
+        if (socket.connected()) return;
+        socket.disconnect();
+        login(config);
+    }
+
     public void logout() {
         Log.d(TAG, "[logout]" + this.getClass().getSimpleName());
         if (socket == null) return;
@@ -47,6 +58,29 @@ public class BaseSocket {
     public boolean isConnected() {
         if (socket == null) return false;
         return socket.connected();
+    }
+
+    /**
+     * socket底层重连机制已经失效，启动业务层的重连
+     */
+    public void onReconnectFailed() {
+        Log.d(TAG, "[reconnect]开始业务层重连机制：" + this.getClass().getSimpleName()
+                + "，socket：" + socket + ",config:" + config);
+        if (config == null || socket == null) {
+            return;
+        }
+        Observable.timer(10, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    reLogin();
+                }, it -> {
+                    Log.d(TAG, "[reconnect]异常" + it.toString());
+                });
+    }
+
+    public void onReconnected() {
+        Log.d(TAG, "[Login]连接成功：" + this.getClass().getSimpleName()
+                + "，socket：" + socket + ",config:" + config);
     }
 
     /**

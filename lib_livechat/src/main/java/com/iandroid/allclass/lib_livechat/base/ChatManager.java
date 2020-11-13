@@ -88,10 +88,7 @@ public abstract class ChatManager implements IEmitterCallBack, IBaseChatAction {
                                 socketEventData.getObjects(),
                                 socketEventData.getNextData());
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                    }
+                }, throwable -> {
                 });
         mDisposable.add(disposable);
     }
@@ -112,12 +109,16 @@ public abstract class ChatManager implements IEmitterCallBack, IBaseChatAction {
     public void onSocketReceive(String event, Object... args) {
         switch (event) {
             case Socket.EVENT_CONNECT:
+                if (baseSocket != null) baseSocket.onReconnected();
                 auth();
                 break;
             case SocketEvent.EVENT_AUTHENTICATED:
                 authBack(true);
                 break;
             case SocketEvent.EVENT_UNAUTHENTICATED:
+                break;
+            case Socket.EVENT_RECONNECT_FAILED:
+                if (baseSocket != null) baseSocket.onReconnectFailed();
                 break;
             default:
                 break;
@@ -139,7 +140,17 @@ public abstract class ChatManager implements IEmitterCallBack, IBaseChatAction {
     }
 
     public boolean send(String event, final Object... args) {
-        return baseSocket != null && baseSocket.send(event, args);
+        if (baseSocket == null) return false;
+
+        if (!baseSocket.send(event, args)) {
+            try {
+                baseSocket.reLogin();
+            } catch (LoginException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+        return true;
     }
 
     public ChatManager(ISocketEventHandler iSocketEventHandler) {

@@ -120,8 +120,8 @@ public abstract class Config {
                 .platform("Android")
                 .userType("user")
                 .reconnectionAttempts(10)
-                .reconnectionDelayMax(60)
-                .reconnectionDelay(10);
+                .reconnectionDelayMax(30*1000)
+                .reconnectionDelay(1000);
     }
 
     @AutoValue.Builder

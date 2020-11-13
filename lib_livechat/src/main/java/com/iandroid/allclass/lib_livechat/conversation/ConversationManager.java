@@ -179,7 +179,7 @@ public class ConversationManager {
             resetConversationUnreadInfoByPfid(pfid);
         }
     }
-    
+
     private void resetConversationUnreadInfoByPfid(String pfid) {
         if (pfid == null) return;
         boolean isNeedUpdate = false;
