@@ -1,5 +1,8 @@
 package com.iandroid.allclass.lib_livechat.base;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.iandroid.allclass.lib_livechat.api.Config;
 import com.iandroid.allclass.lib_livechat.api.StateChat;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
@@ -40,6 +43,10 @@ public class RoomChatPresenter extends ChatManager {
             paramMap.put("name", getConfig().name());
             paramMap.put("LOCALE", Locale.getDefault().getCountry());
             paramMap.put("access_token", getConfig().token());
+            if (!TextUtils.isEmpty(getConfig().from())) {
+                paramMap.put("from", getConfig().from());
+                Log.d(TAG, "[prepare]from：" + getConfig().from());
+            }
             String jwts = Jwts.builder().setClaims(paramMap).
                     signWith(SignatureAlgorithm.HS256, getConfig().liveKey().getBytes()).compact();
 
