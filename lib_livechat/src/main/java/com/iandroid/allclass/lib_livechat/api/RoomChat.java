@@ -114,6 +114,7 @@ public class RoomChat {
                 .userType(config.userType())
                 .platform(config.platform())
                 .event_list(config.event_list())
+                .from(config.from())
                 .socketEventHandler(config.socketEventHandler())
                 .isRoomChatConnection(isRoomChatConnection)
                 .reconnectionDelay(config.reconnectionDelay())
