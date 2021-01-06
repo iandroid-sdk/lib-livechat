@@ -89,6 +89,8 @@ public abstract class Config {
         return true;
     }
 
+    public abstract boolean synToState();
+
     public static boolean isMy(Config config) {
         return config != null
                 && !TextUtils.isEmpty(config.pfid())
@@ -103,7 +105,7 @@ public abstract class Config {
                 .hosts(Arrays.asList(""))
                 .cht_server_list(Arrays.asList(""))
                 .ctl_server_list(Arrays.asList(""))
-                .event_list(new ArrayList<String>())
+                .event_list(new ArrayList<>())
                 .host("")
                 .token("")
                 .pfid("")
@@ -117,6 +119,7 @@ public abstract class Config {
                 .socketEventHandler(null)
                 .liveId("")
                 .liveKey("")
+                .synToState(true)
                 .platform("Android")
                 .userType("user")
                 .reconnectionAttempts(10)
@@ -175,6 +178,8 @@ public abstract class Config {
         public abstract Builder isRoomChatConnection(boolean isRoomChatConnection);
 
         public abstract Builder event_list(ArrayList<String> event_list);
+
+        public abstract Builder synToState(boolean synToState);
 
         public abstract Config build();
     }

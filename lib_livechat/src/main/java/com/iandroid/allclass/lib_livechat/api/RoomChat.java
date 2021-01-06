@@ -122,6 +122,7 @@ public class RoomChat {
                 .reconnectionAttempts(config.reconnectionAttempts())
                 .liveId(config.liveId())
                 .liveKey(config.liveKey())
+                .synToState(config.synToState())
                 .name(config.name())
                 .fromSeq(config.fromSeq())
                 .channelId(config.channelId())

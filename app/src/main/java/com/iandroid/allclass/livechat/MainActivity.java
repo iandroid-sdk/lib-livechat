@@ -174,6 +174,11 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
 
     }
 
+    @Override
+    public void statusCallback(SocketEvent.enmSocketStatus status) {
+
+    }
+
     private RoomChat roomChat;
 
     private void logoutRoom() {
