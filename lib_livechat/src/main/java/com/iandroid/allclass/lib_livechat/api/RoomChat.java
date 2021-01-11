@@ -51,20 +51,6 @@ public class RoomChat {
     }
 
     /**
-     * 主播离开
-     */
-    public void anchorLeave() {
-        StateChat.stateChange(SocketEvent.enmUserState.enmAnchor, SocketEvent.enmStateAction.enmActionAnchorPause, roomConfig);
-    }
-
-    /***
-     * 主播回来
-     */
-    public void anchorBack() {
-        StateChat.stateChange(SocketEvent.enmUserState.enmAnchor, SocketEvent.enmStateAction.enmActionAnchorBack, roomConfig);
-    }
-
-    /**
      * 发送消息
      *
      * @param data
