@@ -88,7 +88,7 @@ public class ChatSession {
         ChatItem chatItem = sendingMsg.remove(chatSayResponse.getSid());
         if (iChatSessionCallBack != null && chatItem != null) {
             chatItem.setIndex(chatSayResponse.getIndex());
-            chatItem.setTs(chatSayResponse.getCreateAt());
+            chatItem.setTs(Math.max(chatSayResponse.getCreateAt(), chatItem.getTs()));
             chatItem.setSubject(chatSayResponse.getTo());
             iChatSessionCallBack.onChatSayResponse(chatSayResponse, chatItem);
         }

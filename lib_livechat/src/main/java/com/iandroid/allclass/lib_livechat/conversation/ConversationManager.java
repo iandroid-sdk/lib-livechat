@@ -101,7 +101,7 @@ public class ConversationManager {
         conversationItem.setContent(conversationSaidReponse.getContent());
         conversationItem.setIndex(conversationSaidReponse.getIndex());
         conversationItem.setUnread(conversationSaidReponse.getUnread());
-        conversationItem.setTs(conversationSaidReponse.getTs());
+        conversationItem.setTs(Math.max(conversationSaidReponse.getTs(), conversationItem.getTs()));
         conversationItem.parse();
 
         if (isNeedAdd) {
