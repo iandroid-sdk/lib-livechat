@@ -113,6 +113,9 @@ public abstract class ChatManager implements IEmitterCallBack, IBaseChatAction {
             case Socket.EVENT_RECONNECT_FAILED:
                 if (baseSocket != null) baseSocket.onReconnectFailed();
                 break;
+            case Socket.EVENT_RECONNECT_ATTEMPT:
+                if (baseSocket != null) baseSocket.onReconnectAttempt();
+                break;
             default:
                 break;
         }
