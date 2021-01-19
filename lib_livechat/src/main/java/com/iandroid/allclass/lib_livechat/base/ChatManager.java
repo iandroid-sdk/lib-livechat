@@ -11,7 +11,6 @@ import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -54,7 +53,7 @@ public abstract class ChatManager implements IEmitterCallBack, IBaseChatAction {
         mDisposable = new CompositeDisposable();
         createMsgReceiveDisposable();
         combineEvent(config);
-        baseSocket.login(config);
+        baseSocket.login(config, false);
     }
 
     /**

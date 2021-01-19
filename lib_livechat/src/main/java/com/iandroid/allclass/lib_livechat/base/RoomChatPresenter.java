@@ -54,6 +54,9 @@ public class RoomChatPresenter extends ChatManager {
             obj.put("token", jwts);
             obj.put("platform", getConfig().platform());
             obj.put("version", getConfig().appVer());
+            if (baseSocket != null && baseSocket.isRelogin()) {
+                obj.put("r", 1);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             obj = null;

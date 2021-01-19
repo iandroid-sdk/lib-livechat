@@ -30,13 +30,15 @@ public class BaseSocket {
     private int hostIndex = 0;
     private IEmitterCallBack iEmitterCallBack;
     private Config config;
+    private boolean isRelogin = false;
 
     public BaseSocket(IEmitterCallBack iEmitterCallBack) {
         this.iEmitterCallBack = iEmitterCallBack;
     }
 
-    public void login(Config config) throws LoginException {
+    public void login(Config config, boolean isRelogin) throws LoginException {
         TAG = !TextUtils.isEmpty(config.tag()) ? config.tag() : TAG;
+        this.isRelogin = isRelogin;
         connect(config);
     }
 
@@ -45,10 +47,12 @@ public class BaseSocket {
         Log.d(TAG, "[reLogin]" + this.getClass().getSimpleName());
         if (socket.connected()) return;
         socket.disconnect();
-        login(config);
+        isRelogin = true;
+        login(config, true);
     }
 
     public void logout() {
+        isRelogin = false;
         Log.d(TAG, "[logout]" + this.getClass().getSimpleName());
         if (socket == null) return;
         socket.disconnect();
@@ -177,6 +181,9 @@ public class BaseSocket {
         return true;
     }
 
+    public boolean isRelogin() {
+        return isRelogin;
+    }
 
     /**
      * 获取当前socket连接配置信息
