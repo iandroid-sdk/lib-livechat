@@ -51,7 +51,8 @@ public class SocketEvent {
         enmInApp(1),
         enmAudience(2),
         enmAnchor(3),
-        enmExit(-1);
+        enmExit(-1),
+        enmReloginRoom(-2);
 
         private int value;
 

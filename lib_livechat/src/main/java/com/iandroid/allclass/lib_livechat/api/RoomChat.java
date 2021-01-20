@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.iandroid.allclass.lib_livechat.base.ChatManager;
 import com.iandroid.allclass.lib_livechat.base.RoomChatPresenter;
+import com.iandroid.allclass.lib_livechat.base.StateChatPresenter;
 import com.iandroid.allclass.lib_livechat.exception.LoginException;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
@@ -44,6 +45,7 @@ public class RoomChat {
      * 登出直播间
      */
     public void logoutRoom() {
+        StateChatPresenter.lastStateRoomChangeMsg = null;
         StateChat.stateChange(SocketEvent.enmUserState.enmInApp, SocketEvent.enmStateAction.enmActionLeaveRoom, roomConfig);
         this.roomConfig = null;
         if (chatRoom != null) chatRoom.logout();

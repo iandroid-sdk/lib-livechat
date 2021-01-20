@@ -20,6 +20,7 @@ import java.util.Locale;
  * 状态机
  */
 public class StateChatPresenter extends ChatManager {
+    public static Object lastStateRoomChangeMsg = null;
 
     public StateChatPresenter(ISocketEventHandler iSocketEventHandler) {
         super(iSocketEventHandler);
@@ -83,6 +84,7 @@ public class StateChatPresenter extends ChatManager {
                             Config config) {
         JSONObject obj = new JSONObject();
         try {
+
             obj.put("s", state.getValue());
             if (!TextUtils.isEmpty(action.getAcion()))
                 obj.put("a", action.getAcion());
@@ -92,10 +94,30 @@ public class StateChatPresenter extends ChatManager {
             if (!TextUtils.isEmpty(pfid)) {
                 obj.put("o_pfid", pfid);
             }
+            lastStateRoomChangeMsg = obj;
             send(SocketEvent.EVENT_C2S_STATUS, obj);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
 
+    public void stateReloginRoom() {
+        JSONObject obj = new JSONObject();
+        if (lastStateRoomChangeMsg != null) {
+            try {
+                obj = new JSONObject(lastStateRoomChangeMsg.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                obj = new JSONObject();
+            }
+        }
+
+        try {
+            obj.put("r", 1);
+            lastStateRoomChangeMsg = obj;
+            send(SocketEvent.EVENT_C2S_STATUS, obj);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
