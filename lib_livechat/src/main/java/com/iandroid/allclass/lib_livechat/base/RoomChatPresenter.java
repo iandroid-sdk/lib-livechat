@@ -69,10 +69,10 @@ public class RoomChatPresenter extends ChatManager {
         Config config = getConfig();
         if (success && config != null && config.isRoomChatConnection()) {
             StateChat.setRoomConfig(config);
-            if (config.synToState()) {
+            if (config.synToState() && (baseSocket == null || !baseSocket.isRelogin())) {
                 StateChat.stateChange(Config.isMy(config) ? SocketEvent.enmUserState.enmAnchor : SocketEvent.enmUserState.enmAudience,
-                            Config.isMy(config) ? SocketEvent.enmStateAction.enmActionStreaming : SocketEvent.enmStateAction.enmActionNull,
-                            config);
+                        Config.isMy(config) ? SocketEvent.enmStateAction.enmActionStreaming : SocketEvent.enmStateAction.enmActionNull,
+                        config);
             }
         }
     }
