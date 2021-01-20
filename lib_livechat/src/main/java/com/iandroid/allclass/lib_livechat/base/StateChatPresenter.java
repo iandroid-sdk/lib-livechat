@@ -58,9 +58,13 @@ public class StateChatPresenter extends ChatManager {
         super.authBack(success);
         if (success) {
             //用户上线
-            StateChat.stateChange(SocketEvent.enmUserState.enmInApp,
-                    SocketEvent.enmStateAction.enmActionNull,
-                    null);
+            if (lastStateRoomChangeMsg != null) {
+                StateChat.stateChange(SocketEvent.enmUserState.enmReloginRoom, SocketEvent.enmStateAction.enmActionNull, null);
+            } else {
+                StateChat.stateChange(SocketEvent.enmUserState.enmInApp,
+                        SocketEvent.enmStateAction.enmActionNull,
+                        null);
+            }
             fetchAllConversation();
         }
     }
@@ -70,6 +74,7 @@ public class StateChatPresenter extends ChatManager {
         if (mDisposable != null)
             mDisposable.add(ConversationGetter.getInstance().conversationRequest());
     }
+
     /**
      * 用户状态更新
      *
@@ -78,13 +83,12 @@ public class StateChatPresenter extends ChatManager {
      * @param pfid
      * @param config
      */
-    public void stateChange(SocketEvent.enmUserState state,
-                            SocketEvent.enmStateAction action,
-                            String pfid,
-                            Config config) {
+    public Object stateChange(SocketEvent.enmUserState state,
+                              SocketEvent.enmStateAction action,
+                              String pfid,
+                              Config config) {
         JSONObject obj = new JSONObject();
         try {
-
             obj.put("s", state.getValue());
             if (!TextUtils.isEmpty(action.getAcion()))
                 obj.put("a", action.getAcion());
@@ -94,11 +98,11 @@ public class StateChatPresenter extends ChatManager {
             if (!TextUtils.isEmpty(pfid)) {
                 obj.put("o_pfid", pfid);
             }
-            lastStateRoomChangeMsg = obj;
             send(SocketEvent.EVENT_C2S_STATUS, obj);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return obj;
     }
 
     public void stateReloginRoom() {

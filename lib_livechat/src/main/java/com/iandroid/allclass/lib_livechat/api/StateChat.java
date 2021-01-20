@@ -161,8 +161,10 @@ public class StateChat implements ISocketEventHandler {
                 break;
             case enmAnchor:
             case enmAudience:
-                if (curRoomConfig != null)
-                    getStateChatPresenter().stateChange(state, action, curRoomConfig.pfid(), curRoomConfig);
+                if (curRoomConfig != null) {
+                    StateChatPresenter.lastStateRoomChangeMsg =
+                            getStateChatPresenter().stateChange(state, action, curRoomConfig.pfid(), curRoomConfig);
+                }
                 break;
             case enmReloginRoom:
                 getStateChatPresenter().stateReloginRoom();
