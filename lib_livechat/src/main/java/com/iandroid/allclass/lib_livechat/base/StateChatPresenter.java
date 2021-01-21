@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.iandroid.allclass.lib_livechat.api.Config;
 import com.iandroid.allclass.lib_livechat.api.StateChat;
+import com.iandroid.allclass.lib_livechat.api.UserInfo;
 import com.iandroid.allclass.lib_livechat.conversation.ConversationGetter;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
@@ -42,7 +43,7 @@ public class StateChatPresenter extends ChatManager {
     public Object getAuthCode() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("access_token", getConfig().token());
+            obj.put("access_token", UserInfo.getUserToken(getConfig()));
             obj.put("pfid", getConfig().pfid());
             obj.put("platform", getConfig().platform());
             obj.put("version", getConfig().appVer());

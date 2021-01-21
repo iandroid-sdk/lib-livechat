@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.iandroid.allclass.lib_livechat.api.Config;
 import com.iandroid.allclass.lib_livechat.api.StateChat;
+import com.iandroid.allclass.lib_livechat.api.UserInfo;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
 import org.json.JSONObject;
@@ -42,7 +43,7 @@ public class RoomChatPresenter extends ChatManager {
             paramMap.put("live_id", getConfig().liveId());
             paramMap.put("name", getConfig().name());
             paramMap.put("LOCALE", Locale.getDefault().getCountry());
-            paramMap.put("access_token", getConfig().token());
+            paramMap.put("access_token", UserInfo.getUserToken(getConfig()));
             if (!TextUtils.isEmpty(getConfig().from())) {
                 paramMap.put("from", getConfig().from());
                 Log.d(TAG, "[prepare]from：" + getConfig().from());

@@ -35,6 +35,11 @@ public class StateChat implements ISocketEventHandler {
     private Config roomConfig;//当前所在直播间的配置信息
     private IStateKeyCallBack iStateKeyCallBack;
     private Map<String, WeakReference<ChatSession>> chatSessionMap;
+
+    public void updateUserToken(String token) {
+        UserInfo.userToken = token;
+    }
+
     /**
      * 登录
      *
@@ -51,6 +56,7 @@ public class StateChat implements ISocketEventHandler {
      * 登出
      */
     public static void logout() {
+        UserInfo.userToken = null;
         ConversationManager.getInstance().clearData();
         stateChange(SocketEvent.enmUserState.enmExit, SocketEvent.enmStateAction.enmActionNull, null);
         getStateChatPresenter().logout();
