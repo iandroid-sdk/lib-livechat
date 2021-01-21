@@ -29,6 +29,7 @@ public class StateChatPresenter extends ChatManager {
         socket_event_list.add(SocketEvent.EVENT_PRIVATECHAT_SAID);
         socket_event_list.add(SocketEvent.EVENT_PRIVATECAHT_MLIST);
         socket_event_list.add(SocketEvent.EVENT_PRIVATECHAT_SAY);
+        socket_event_list.add(SocketEvent.EVENT_CMD);
     }
 
     @Override

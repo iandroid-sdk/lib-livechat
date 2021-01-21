@@ -179,6 +179,11 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
 
     }
 
+    @Override
+    public void tickOut() {
+
+    }
+
     private RoomChat roomChat;
 
     private void logoutRoom() {

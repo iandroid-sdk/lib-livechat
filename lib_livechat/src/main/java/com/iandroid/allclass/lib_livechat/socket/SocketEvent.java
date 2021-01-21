@@ -37,6 +37,8 @@ public class SocketEvent {
     public static final String EVENT_PRIVATECHAT_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
     public static final String EVENT_PRIVATECAHT_MLIST = "pmsg/v1/msglist";
     public static final String EVENT_PRIVATECHAT_SAY = "pmsg/v1/say";
+    public static final String EVENT_CMD = "cmd";
+    public static final String CMD_REVOKE = "revoke";
 
     //msg tag
     public static final String IM_HEAD_READ = "read";

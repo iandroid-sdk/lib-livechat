@@ -48,4 +48,9 @@ public interface IStateKeyCallBack {
      * @param status
      */
     public void statusCallback(SocketEvent.enmSocketStatus status);
+
+    /**
+     * 提出登录
+     */
+    public void tickOut();
 }

@@ -16,6 +16,9 @@ import com.iandroid.allclass.lib_livechat.conversation.ConversationManager;
 import com.iandroid.allclass.lib_livechat.exception.LoginException;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +71,15 @@ public class StateChat implements ISocketEventHandler {
             case SocketEvent.EVENT_C2S_SAY:
                 eventData = JSON.parseObject(original[0].toString(), ChatSayResponse.class);
                 break;
+            case SocketEvent.EVENT_CMD: {
+                try {
+                    JSONObject json = new JSONObject(original[0].toString());
+                    eventData = json.optString("cmd");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
         }
         return eventData;
     }
@@ -108,6 +120,14 @@ public class StateChat implements ISocketEventHandler {
                 if (iStateKeyCallBack != null)
                     iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmAuthFailed);
                 break;
+            case SocketEvent.EVENT_CMD: {
+                if (eventData != null
+                        && eventData instanceof String
+                        && eventData.toString().equalsIgnoreCase(SocketEvent.CMD_REVOKE)
+                        && iStateKeyCallBack != null)
+                    iStateKeyCallBack.tickOut();
+            }
+            break;
         }
     }
 
