@@ -136,7 +136,9 @@ public abstract class ChatManager implements IEmitterCallBack, IBaseChatAction {
     }
 
     public boolean send(String event, final Object... args) {
-        if (baseSocket == null) return false;
+        if (baseSocket == null
+                || args == null
+                || args.length == 0) return false;
 
         if (!baseSocket.send(event, args)) {
             try {
