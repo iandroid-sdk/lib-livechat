@@ -57,6 +57,7 @@ public class BaseSocket {
         isLastConnected = false;
         Log.d(TAG, "[logout]" + this.getClass().getSimpleName());
         if (socket == null) return;
+        socket.off();
         socket.disconnect();
         socket = null;
     }
@@ -201,5 +202,9 @@ public class BaseSocket {
      */
     public Config getConfig() {
         return config;
+    }
+
+    public void setiEmitterCallBack(IEmitterCallBack iEmitterCallBack) {
+        this.iEmitterCallBack = iEmitterCallBack;
     }
 }
