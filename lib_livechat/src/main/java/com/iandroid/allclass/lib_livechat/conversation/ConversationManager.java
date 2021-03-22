@@ -54,7 +54,7 @@ public class ConversationManager {
      *
      * @param datalist
      */
-    public void addConversations(List<ConversationItem> datalist) {
+    public synchronized void addConversations(List<ConversationItem> datalist) {
         for (ConversationItem item : datalist) {
             int index = conversationItemList.indexOf(item);
             item.parse();

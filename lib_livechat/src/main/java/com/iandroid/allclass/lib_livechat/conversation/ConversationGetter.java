@@ -15,9 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 
 /**
  * created by wangkm
@@ -26,42 +23,40 @@ import io.reactivex.functions.Predicate;
  */
 public class ConversationGetter {
     private static final int pagesize = 40;
-    private int curOfficalConversationIndex = 0;
+    private int curOfficailConversationIndex = 0;
     private int curUserConversationIndex = 0;
 
-    private int nextOfficalConversationIndex = 0;
+    private int nextOfficailConversationIndex = 0;
     private int nextUserConversationIndex = 0;
     private final int maxRetryTime = 10;
 
     //获取会话列表
     public Disposable conversationRequest() {
-        curOfficalConversationIndex = 0;
+        curOfficailConversationIndex = 0;
         curUserConversationIndex = 0;
-        nextOfficalConversationIndex = 0;
+        nextOfficailConversationIndex = 0;
         nextUserConversationIndex = 0;
-        return Observable.intervalRange(1, maxRetryTime, 0, 3, TimeUnit.SECONDS)
-                .takeWhile(aLong -> !isEndOfConversation())
-                .doFinally(() -> {
-                    Log.d("lang_socket", "[conversation]Request finally");
-                    StateChat.getInstance().conversationLoadSuccess();
-                })
+        return Observable.just(1)
                 .subscribe(integer -> {
-                    if (curOfficalConversationIndex <= nextOfficalConversationIndex)
-                        StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
-                                getConversationRequestParam(nextOfficalConversationIndex,
-                                        pagesize,
-                                        SocketUtils.transactionId(String.valueOf(nextOfficalConversationIndex))));
-
-                    if (curUserConversationIndex <= nextUserConversationIndex) {
-                        StateChat.getInstance().send(SocketEvent.EVENT_C2S_OFFICIAL_ULIST,
-                                getConversationRequestParam(nextUserConversationIndex,
-                                        pagesize,
-                                        SocketUtils.transactionId(String.valueOf(nextUserConversationIndex))));
-
-                    }
-                }, throwable -> {
-
+                    pullUList(true);
+                    pullUList(false);
                 });
+    }
+
+    private void pullUList(boolean isOfficial) {
+        if (isOfficial) {
+            if (curOfficailConversationIndex <= nextOfficailConversationIndex)
+                StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
+                        getConversationRequestParam(nextOfficailConversationIndex,
+                                pagesize,
+                                SocketUtils.transactionId(String.valueOf(nextOfficailConversationIndex))));
+        } else if (curUserConversationIndex <= nextUserConversationIndex) {
+            StateChat.getInstance().send(SocketEvent.EVENT_C2S_OFFICIAL_ULIST,
+                    getConversationRequestParam(nextUserConversationIndex,
+                            pagesize,
+                            SocketUtils.transactionId(String.valueOf(nextUserConversationIndex))));
+
+        }
     }
 
     private static JSONObject getConversationRequestParam(int start, int count, String sid) {
@@ -78,7 +73,7 @@ public class ConversationGetter {
     }
 
     private boolean isEndOfConversation() {
-        return curOfficalConversationIndex > nextOfficalConversationIndex
+        return curOfficailConversationIndex > nextOfficailConversationIndex
                 && curUserConversationIndex > nextUserConversationIndex;
     }
 
@@ -98,24 +93,31 @@ public class ConversationGetter {
             boolean isFromOfficalConversation = TextUtils.equals(event, SocketEvent.EVENT_PRIVATECHAT_OFFICIAL_ULIST);
             if (isFromOfficalConversation) {
                 if (hasMore) {
-                    nextOfficalConversationIndex = ++responsePageIndex;
-                    curOfficalConversationIndex = nextOfficalConversationIndex;
+                    nextOfficailConversationIndex = ++responsePageIndex;
+                    curOfficailConversationIndex = nextOfficailConversationIndex;
+                    pullUList(true);
                     //Log.d("lang_socket", "officialConversation hasmore, nextpage:" + (nextOfficalConversationIndex));
-
                 } else {
                     Log.d("lang_socket", "[Conversation]official isEnd, totalPage:" + (responsePageIndex + 1));
-                    curOfficalConversationIndex++;
+                    curOfficailConversationIndex++;
                 }
             } else {
                 if (hasMore) {
                     nextUserConversationIndex = ++responsePageIndex;
                     curUserConversationIndex = nextUserConversationIndex;
+                    pullUList(false);
                     //Log.d("lang_socket", "userConversation hasmore, nextpage:" + (nextUserConversationIndex));
                 } else {
                     Log.d("lang_socket", "[Conversation]user isEnd, totalPage:" + (responsePageIndex + 1));
                     curUserConversationIndex++;
                 }
             }
+
+            if (isEndOfConversation()){
+                Log.d("lang_socket", "[conversation]Request finally");
+                StateChat.getInstance().conversationLoadSuccess();
+            }
+
         } catch (Exception e) {
             Log.d("lang_socket", "[Conversation]Exception:" + e);
         }
