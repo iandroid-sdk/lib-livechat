@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.google.auto.value.AutoValue;
 import com.iandroid.allclass.lib_livechat.base.ISocketEventHandler;
 import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
+import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,7 +90,7 @@ public abstract class Config {
         return true;
     }
 
-    public abstract boolean synToState();
+    public abstract SocketEvent.enmStateSynType synToState();
 
     public static boolean isMy(Config config) {
         return config != null
@@ -119,7 +120,7 @@ public abstract class Config {
                 .socketEventHandler(null)
                 .liveId("")
                 .liveKey("")
-                .synToState(true)
+                .synToState(SocketEvent.enmStateSynType.enmDefault)
                 .platform("Android")
                 .userType("user")
                 .reconnectionAttempts(10)
@@ -179,7 +180,7 @@ public abstract class Config {
 
         public abstract Builder event_list(ArrayList<String> event_list);
 
-        public abstract Builder synToState(boolean synToState);
+        public abstract Builder synToState(SocketEvent.enmStateSynType synToState);
 
         public abstract Config build();
     }

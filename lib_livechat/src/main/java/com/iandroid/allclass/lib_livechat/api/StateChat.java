@@ -195,6 +195,10 @@ public class StateChat implements ISocketEventHandler {
             case enmReloginRoom:
                 getStateChatPresenter().stateReloginRoom();
                 break;
+            case enmFromFloatView:
+                getStateChatPresenter().stateChangeFromFloatView(Config.isMy(curRoomConfig)? SocketEvent.enmUserState.enmAnchor : SocketEvent.enmUserState.enmAudience,
+                        Config.isMy(curRoomConfig) ? SocketEvent.enmStateAction.enmActionStreaming : SocketEvent.enmStateAction.enmActionNull);
+                break;
         }
     }
 

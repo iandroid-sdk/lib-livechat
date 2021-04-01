@@ -54,7 +54,8 @@ public class SocketEvent {
         enmAudience(2),
         enmAnchor(3),
         enmExit(-1),
-        enmReloginRoom(-2);
+        enmReloginRoom(-2),
+        enmFromFloatView(-3);
 
         private int value;
 
@@ -73,10 +74,7 @@ public class SocketEvent {
         enmActionStreaming("A0"),
         enmActionLeaveRoom("A1"),
         enmActionAnchorPause("A6"),
-        enmActionAnchorBack("A7"),
-        enmActionFollow("A8"),
-        enmActionCancelFollow("A9"),
-        enmActionFirstSendGiftEnterRoom("A10");
+        enmActionAnchorBack("A7");
         private String acion;
 
         enmStateAction(String acion) {
@@ -93,5 +91,11 @@ public class SocketEvent {
         enmConnectError,
         enmAuthSuccess,
         enmAuthFailed
+    }
+
+    public enum enmStateSynType{
+        enmDefault, //默认正常通知状态机
+        enmNotNotifyState,// 不通知状态机
+        enmFromFloatView    //通知状态由最小化模式返回
     }
 }

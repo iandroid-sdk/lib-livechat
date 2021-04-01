@@ -100,6 +100,24 @@ public class StateChatPresenter extends ChatManager {
             if (!TextUtils.isEmpty(pfid)) {
                 obj.put("o_pfid", pfid);
             }
+            lastStateRoomChangeMsg = obj;
+            send(SocketEvent.EVENT_C2S_STATUS, obj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
+    public Object stateChangeFromFloatView(SocketEvent.enmUserState state,
+                              SocketEvent.enmStateAction action) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("s", state.getValue());
+            if (!TextUtils.isEmpty(action.getAcion()))
+                obj.put("a", action.getAcion());
+
+            obj.put("r", 1);
+            lastStateRoomChangeMsg = obj;
             send(SocketEvent.EVENT_C2S_STATUS, obj);
         } catch (JSONException e) {
             e.printStackTrace();
