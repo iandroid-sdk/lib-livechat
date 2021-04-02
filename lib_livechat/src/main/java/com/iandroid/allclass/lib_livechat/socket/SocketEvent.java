@@ -55,7 +55,9 @@ public class SocketEvent {
         enmAnchor(3),
         enmExit(-1),
         enmReloginRoom(-2),
-        enmFromFloatView(-3);
+        enmFromFloatView(-3),
+        enmAppBackground(-4),
+        enmAppFront(-5);
 
         private int value;
 
@@ -74,9 +76,11 @@ public class SocketEvent {
         enmActionStreaming("A0"),
         enmActionLeaveRoom("A1"),
         enmActionAnchorPause("A6"),
-        enmActionAnchorBack("A7");
-        private String acion;
+        enmActionAnchorBack("A7"),
+        enmActionAppFront("A11"),
+        enmActionAppBackground("A12");
 
+        private String acion;
         enmStateAction(String acion) {
             this.acion = acion;
         }

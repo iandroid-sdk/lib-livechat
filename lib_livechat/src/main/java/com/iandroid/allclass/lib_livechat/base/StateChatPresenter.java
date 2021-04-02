@@ -125,6 +125,21 @@ public class StateChatPresenter extends ChatManager {
         return obj;
     }
 
+    public Object stateChange(SocketEvent.enmUserState state,
+            SocketEvent.enmStateAction action) {
+        JSONObject obj = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(action.getAcion())) {
+                obj.put("s", state.getValue());
+                obj.put("a", action.getAcion());
+                send(SocketEvent.EVENT_C2S_STATUS, obj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
     public void stateReloginRoom() {
         JSONObject obj = new JSONObject();
         if (lastStateRoomChangeMsg != null) {

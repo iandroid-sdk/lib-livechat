@@ -157,6 +157,14 @@ public class StateChat implements ISocketEventHandler {
             stateChatPresenter.fetchAllConversation();
     }
 
+    public static void appBringToFront() {
+        stateChange(SocketEvent.enmUserState.enmAppFront, null, null);
+    }
+
+    public static void appBringToBack() {
+        stateChange(SocketEvent.enmUserState.enmAppBackground, null, null);
+    }
+
     /**
      * 全局状态改变：登录app，进入直播间，退出直播间等
      */
@@ -196,8 +204,16 @@ public class StateChat implements ISocketEventHandler {
                 getStateChatPresenter().stateReloginRoom();
                 break;
             case enmFromFloatView:
-                getStateChatPresenter().stateChangeFromFloatView(Config.isMy(curRoomConfig)? SocketEvent.enmUserState.enmAnchor : SocketEvent.enmUserState.enmAudience,
+                getStateChatPresenter().stateChangeFromFloatView(Config.isMy(curRoomConfig) ? SocketEvent.enmUserState.enmAnchor : SocketEvent.enmUserState.enmAudience,
                         Config.isMy(curRoomConfig) ? SocketEvent.enmStateAction.enmActionStreaming : SocketEvent.enmStateAction.enmActionNull);
+                break;
+            case enmAppBackground:
+                getStateChatPresenter().stateChange(curRoomConfig == null ? SocketEvent.enmUserState.enmInApp : (Config.isMy(curRoomConfig) ? SocketEvent.enmUserState.enmAnchor : SocketEvent.enmUserState.enmAudience),
+                        SocketEvent.enmStateAction.enmActionAppBackground);
+                break;
+            case enmAppFront:
+                getStateChatPresenter().stateChange(curRoomConfig == null ? SocketEvent.enmUserState.enmInApp : (Config.isMy(curRoomConfig) ? SocketEvent.enmUserState.enmAnchor : SocketEvent.enmUserState.enmAudience),
+                        SocketEvent.enmStateAction.enmActionAppFront);
                 break;
         }
     }
