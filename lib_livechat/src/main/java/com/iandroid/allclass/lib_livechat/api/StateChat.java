@@ -158,11 +158,15 @@ public class StateChat implements ISocketEventHandler {
     }
 
     public static void appBringToFront() {
-        stateChange(SocketEvent.enmUserState.enmAppFront, null, null);
+        if (getInstance().stateChatPresenter != null
+                && getInstance().stateChatPresenter.isConnected())
+            stateChange(SocketEvent.enmUserState.enmAppFront, null, null);
     }
 
     public static void appBringToBack() {
-        stateChange(SocketEvent.enmUserState.enmAppBackground, null, null);
+        if (getInstance().stateChatPresenter != null
+                && getInstance().stateChatPresenter.isConnected())
+            stateChange(SocketEvent.enmUserState.enmAppBackground, null, null);
     }
 
     /**
