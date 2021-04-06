@@ -109,7 +109,8 @@ public class StateChatPresenter extends ChatManager {
     }
 
     public Object stateChangeFromFloatView(SocketEvent.enmUserState state,
-                              SocketEvent.enmStateAction action) {
+                              SocketEvent.enmStateAction action,
+                                           Config config) {
         JSONObject obj = new JSONObject();
         try {
             obj.put("s", state.getValue());
@@ -117,6 +118,11 @@ public class StateChatPresenter extends ChatManager {
                 obj.put("a", action.getAcion());
 
             obj.put("r", 1);
+
+            if (config != null && !TextUtils.isEmpty(config.liveId())) {
+                obj.put("live_id", config.liveId());
+            }
+
             lastStateRoomChangeMsg = obj;
             send(SocketEvent.EVENT_C2S_STATUS, obj);
         } catch (JSONException e) {
@@ -132,6 +138,7 @@ public class StateChatPresenter extends ChatManager {
             if (!TextUtils.isEmpty(action.getAcion())) {
                 obj.put("s", state.getValue());
                 obj.put("a", action.getAcion());
+
                 send(SocketEvent.EVENT_C2S_STATUS, obj);
             }
         } catch (JSONException e) {
