@@ -1,5 +1,7 @@
 package com.iandroid.allclass.lib_livechat.base;
 
+import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
+
 /**
  * created by wangkm
  * on 2020/8/11.
@@ -21,4 +23,12 @@ public interface ISocketEventHandler {
      * @param eventData  onMsgParse返回的数据
      */
     public void onReceiveMsg(String event, Object[] originalData, Object eventData);
+
+
+    /**
+     * main thread中回调
+     * 通知socket连接及其认证状态
+     * @param status
+     */
+    public void statusCallback(SocketEvent.enmSocketStatus status);
 }

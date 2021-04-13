@@ -94,8 +94,24 @@ public abstract class ChatManager implements IEmitterCallBack, IBaseChatAction {
     }
 
     protected void handleEventOnMainThread(String event, Object[] originalData, Object actionData) {
-        if (iSocketEventHandler != null)
+        if (iSocketEventHandler != null) {
             iSocketEventHandler.onReceiveMsg(event, originalData, actionData);
+
+            switch (event) {
+                case Socket.EVENT_CONNECT:
+                    iSocketEventHandler.statusCallback(SocketEvent.enmSocketStatus.enmConnected);
+                    break;
+                case Socket.EVENT_RECONNECT_ERROR:
+                    iSocketEventHandler.statusCallback(SocketEvent.enmSocketStatus.enmConnectError);
+                    break;
+                case SocketEvent.EVENT_AUTHENTICATED:
+                    iSocketEventHandler.statusCallback(SocketEvent.enmSocketStatus.enmAuthSuccess);
+                    break;
+                case SocketEvent.EVENT_UNAUTHENTICATED:
+                    iSocketEventHandler.statusCallback(SocketEvent.enmSocketStatus.enmAuthFailed);
+                    break;
+            }
+        }
     }
 
     @Override

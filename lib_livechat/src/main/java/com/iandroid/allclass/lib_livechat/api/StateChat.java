@@ -110,22 +110,6 @@ public class StateChat implements ISocketEventHandler {
                     chatSayResponse((ChatSayResponse) eventData);
                 }
                 break;
-            case Socket.EVENT_CONNECT:
-                if (iStateKeyCallBack != null)
-                    iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmConnected);
-                break;
-            case Socket.EVENT_RECONNECT_ERROR:
-                if (iStateKeyCallBack != null)
-                    iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmConnectError);
-                break;
-            case SocketEvent.EVENT_AUTHENTICATED:
-                if (iStateKeyCallBack != null)
-                    iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmAuthSuccess);
-                break;
-            case SocketEvent.EVENT_UNAUTHENTICATED:
-                if (iStateKeyCallBack != null)
-                    iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmAuthFailed);
-                break;
             case SocketEvent.EVENT_CMD: {
                 if (eventData != null
                         && eventData instanceof String
@@ -135,6 +119,12 @@ public class StateChat implements ISocketEventHandler {
             }
             break;
         }
+    }
+
+    @Override
+    public void statusCallback(SocketEvent.enmSocketStatus status) {
+        if (iStateKeyCallBack != null)
+            iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmConnectError);
     }
 
     public void conversationLoadSuccess() {
