@@ -11,8 +11,6 @@ import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
 
 import org.json.JSONObject;
 
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 
@@ -93,7 +91,7 @@ public class ConversationGetter {
             boolean isFromOfficalConversation = TextUtils.equals(event, SocketEvent.EVENT_PRIVATECHAT_OFFICIAL_ULIST);
             if (isFromOfficalConversation) {
                 if (hasMore) {
-                    nextOfficailConversationIndex = ++responsePageIndex;
+                    nextOfficailConversationIndex = responsePageIndex + responsePagesize;
                     curOfficailConversationIndex = nextOfficailConversationIndex;
                     pullUList(true);
                     //Log.d("lang_socket", "officialConversation hasmore, nextpage:" + (nextOfficalConversationIndex));
@@ -103,7 +101,7 @@ public class ConversationGetter {
                 }
             } else {
                 if (hasMore) {
-                    nextUserConversationIndex = ++responsePageIndex;
+                    nextUserConversationIndex = responsePageIndex + responsePagesize;
                     curUserConversationIndex = nextUserConversationIndex;
                     pullUList(false);
                     //Log.d("lang_socket", "userConversation hasmore, nextpage:" + (nextUserConversationIndex));
