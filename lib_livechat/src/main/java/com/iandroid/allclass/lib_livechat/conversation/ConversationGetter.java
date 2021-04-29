@@ -46,12 +46,12 @@ public class ConversationGetter {
     private void pullUList(boolean isOfficial) {
         if (isOfficial) {
             if (curOfficailConversationIndex <= nextOfficailConversationIndex)
-                StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
+                StateChat.getInstance().send(SocketEvent.EVENT_C2S_OFFICIAL_ULIST,
                         getConversationRequestParam(nextOfficailConversationIndex,
                                 pagesize,
                                 SocketUtils.transactionId(String.valueOf(nextOfficailConversationIndex))));
         } else if (curUserConversationIndex <= nextUserConversationIndex) {
-            StateChat.getInstance().send(SocketEvent.EVENT_C2S_OFFICIAL_ULIST,
+            StateChat.getInstance().send(SocketEvent.EVENT_C2S_UNOFFICIAL_ULIST,
                     getConversationRequestParam(nextUserConversationIndex,
                             pagesize,
                             SocketUtils.transactionId(String.valueOf(nextUserConversationIndex))));
