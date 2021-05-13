@@ -124,7 +124,7 @@ public class StateChat implements ISocketEventHandler {
     @Override
     public void statusCallback(SocketEvent.enmSocketStatus status) {
         if (iStateKeyCallBack != null)
-            iStateKeyCallBack.statusCallback(SocketEvent.enmSocketStatus.enmConnectError);
+            iStateKeyCallBack.statusCallback(status);
     }
 
     public void conversationLoadSuccess() {
