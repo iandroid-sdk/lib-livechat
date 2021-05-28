@@ -58,6 +58,7 @@ public class ConversationManager {
         for (ConversationItem item : datalist) {
             int index = conversationItemList.indexOf(item);
             item.parse();
+            if (item.getPfid() == null || item.getPfid().isEmpty()) continue;
             if (index >= 0) {
                 item.setUser_info(conversationItemList.get(index).getUser_info());
                 conversationItemList.set(index, item);
@@ -85,7 +86,9 @@ public class ConversationManager {
 
     public void updateConversationOnSaid(ConversationSaidReponse conversationSaidReponse,
                                          IStateKeyCallBack iStateKeyCallBack) {
-        if (conversationSaidReponse == null || TextUtils.isEmpty(conversationSaidReponse.getPfid()))
+        if (conversationSaidReponse == null
+                || conversationSaidReponse.getPfid() == null
+                || TextUtils.isEmpty(conversationSaidReponse.getPfid()))
             return;
 
         ConversationItem conversationItem = new ConversationItem();

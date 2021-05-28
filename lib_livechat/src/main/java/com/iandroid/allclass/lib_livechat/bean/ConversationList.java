@@ -6,17 +6,8 @@ import java.util.List;
  * created by wangkm
  * on 2020/8/18.
  */
-public class ConversationList {
-    private String sid;
+public class ConversationList extends BaseResponse {
     private List<ConversationItem> result;
-
-    public String getSid() {
-        return sid;
-    }
-
-    public void setSid(String sid) {
-        this.sid = sid;
-    }
 
     public List<ConversationItem> getResult() {
         return result;
