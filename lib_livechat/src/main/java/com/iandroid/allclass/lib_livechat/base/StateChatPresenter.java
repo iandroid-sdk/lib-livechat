@@ -94,9 +94,15 @@ public class StateChatPresenter extends ChatManager {
             obj.put("s", state.getValue());
             if (!TextUtils.isEmpty(action.getAcion()))
                 obj.put("a", action.getAcion());
+
             if (config != null && !TextUtils.isEmpty(config.liveId())) {
                 obj.put("live_id", config.liveId());
             }
+
+            if(config != null && !TextUtils.isEmpty(config.from())){
+                obj.put("from", config.from());
+            }
+
             if (!TextUtils.isEmpty(pfid)) {
                 obj.put("o_pfid", pfid);
             }
