@@ -11,6 +11,7 @@ public class ConversationContent {
     private String liveurl;
     private int msg_type = ChatMsgType.TEXT;   //图文
     private String content;//红包的话，就是祝福语；系统提示的描述文字
+    private JumpAble action;
 
     public String getLiveurl() {
         return liveurl;
@@ -30,6 +31,14 @@ public class ConversationContent {
 
     public String getTitle() {
         return title;
+    }
+
+    public JumpAble getAction() {
+        return action;
+    }
+
+    public void setAction(JumpAble action) {
+        this.action = action;
     }
 
     public void setTitle(String title) {
