@@ -11,7 +11,33 @@ public class ConversationContent {
     private String liveurl;
     private int msg_type = ChatMsgType.TEXT;   //图文
     private String content;//红包的话，就是祝福语；系统提示的描述文字
-    private JumpAble action;
+    private String gift_effect;
+    private int gift_price;
+    private int gift_id;
+
+    public String getGift_effect() {
+        return gift_effect;
+    }
+
+    public void setGift_effect(String gift_effect) {
+        this.gift_effect = gift_effect;
+    }
+
+    public int getGift_price() {
+        return gift_price;
+    }
+
+    public void setGift_price(int gift_price) {
+        this.gift_price = gift_price;
+    }
+
+    public int getGift_id() {
+        return gift_id;
+    }
+
+    public void setGift_id(int gift_id) {
+        this.gift_id = gift_id;
+    }
 
     public String getLiveurl() {
         return liveurl;
@@ -31,14 +57,6 @@ public class ConversationContent {
 
     public String getTitle() {
         return title;
-    }
-
-    public JumpAble getAction() {
-        return action;
-    }
-
-    public void setAction(JumpAble action) {
-        this.action = action;
     }
 
     public void setTitle(String title) {
