@@ -23,8 +23,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.socket.client.Socket;
-
 /**
  * created by wangkm
  * on 2020/8/18.
@@ -116,6 +114,11 @@ public class StateChat implements ISocketEventHandler {
                         && eventData.toString().equalsIgnoreCase(SocketEvent.CMD_REVOKE)
                         && iStateKeyCallBack != null)
                     iStateKeyCallBack.tickOut();
+            }
+            break;
+            default: {
+                if (iStateKeyCallBack != null)
+                    iStateKeyCallBack.onReceiveMsg(event, originalData, eventData);
             }
             break;
         }

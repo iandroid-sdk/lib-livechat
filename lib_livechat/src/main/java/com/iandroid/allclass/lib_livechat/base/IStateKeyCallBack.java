@@ -53,4 +53,9 @@ public interface IStateKeyCallBack {
      * 提出登录
      */
     public void tickOut();
+
+    /**
+     * 自定义协议
+     */
+    public void onReceiveMsg(String event, Object[] originalData, Object eventData);
 }
