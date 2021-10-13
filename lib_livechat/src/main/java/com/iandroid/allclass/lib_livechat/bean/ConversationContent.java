@@ -13,7 +13,7 @@ public class ConversationContent {
     private String content;//红包的话，就是祝福语；系统提示的描述文字
     private String gift_effect;
     private int gift_price;
-    private int gift_id;
+    private int effect_id;
 
     public String getGift_effect() {
         return gift_effect;
@@ -31,12 +31,12 @@ public class ConversationContent {
         this.gift_price = gift_price;
     }
 
-    public int getGift_id() {
-        return gift_id;
+    public int getEffect_id() {
+        return effect_id;
     }
 
-    public void setGift_id(int gift_id) {
-        this.gift_id = gift_id;
+    public void setEffect_id(int effect_id) {
+        this.effect_id = effect_id;
     }
 
     public String getLiveurl() {
