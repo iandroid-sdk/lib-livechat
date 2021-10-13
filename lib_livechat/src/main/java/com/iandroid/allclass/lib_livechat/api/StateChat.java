@@ -277,15 +277,23 @@ public class StateChat implements ISocketEventHandler {
     public void onSaid(ConversationSaidReponse conversationSaidReponse) {
         if (chatSessionMap == null) return;
 
-        String pfid = conversationSaidReponse.getPfid();
-        if (!TextUtils.isEmpty(pfid)
-                && (chatSessionMap.containsKey(pfid)
-                || (StateChat.isMy(pfid) && !TextUtils.isEmpty(conversationSaidReponse.getTo_pfid())
-                && chatSessionMap.containsKey(conversationSaidReponse.getTo_pfid())))) {
-            WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
+        String sessionUserId = getSessionPfidFromSaidMsg(conversationSaidReponse);
+        if (!TextUtils.isEmpty(sessionUserId)
+                && (chatSessionMap.containsKey(sessionUserId))) {
+            WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(sessionUserId);
             if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
             chatSessionWeakReference.get().onSaid(conversationSaidReponse);
         }
+    }
+
+    private String getSessionPfidFromSaidMsg(ConversationSaidReponse conversationSaidReponse) {
+        String sessionUserId = conversationSaidReponse.getPfid();
+        if (StateChat.isMy(sessionUserId)
+                && !TextUtils.isEmpty(conversationSaidReponse.getTo_pfid())
+                && chatSessionMap.containsKey(conversationSaidReponse.getTo_pfid())){
+            sessionUserId = conversationSaidReponse.getTo_pfid();
+        }
+        return sessionUserId;
     }
 
     //发送消息返回响应
