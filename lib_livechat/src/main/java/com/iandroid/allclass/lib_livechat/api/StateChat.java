@@ -37,6 +37,7 @@ public class StateChat implements ISocketEventHandler {
     public void updateUserToken(String token) {
         UserInfo.userToken = token;
     }
+    private Config curStatueConfig;
 
     /**
      * 登录
@@ -46,8 +47,17 @@ public class StateChat implements ISocketEventHandler {
      */
     public static void login(Config config) throws LoginException {
         getInstance().iStateKeyCallBack = config.stateKeyCallBack();
+        getInstance().curStatueConfig = config;
 
         getStateChatPresenter().login(config);
+    }
+
+    public static Boolean isMy(String userId) {
+        if (getInstance().curStatueConfig == null
+                || getInstance().curStatueConfig.selfPfid() == null
+                || TextUtils.isEmpty(userId)) return false;
+
+        return TextUtils.equals(getInstance().curStatueConfig.selfPfid(), userId);
     }
 
     /**
@@ -268,7 +278,10 @@ public class StateChat implements ISocketEventHandler {
         if (chatSessionMap == null) return;
 
         String pfid = conversationSaidReponse.getPfid();
-        if (!TextUtils.isEmpty(pfid) && chatSessionMap.containsKey(pfid)) {
+        if (!TextUtils.isEmpty(pfid)
+                && (chatSessionMap.containsKey(pfid)
+                || (StateChat.isMy(pfid) && !TextUtils.isEmpty(conversationSaidReponse.getTo_pfid())
+                && chatSessionMap.containsKey(conversationSaidReponse.getTo_pfid())))) {
             WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(pfid);
             if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
             chatSessionWeakReference.get().onSaid(conversationSaidReponse);

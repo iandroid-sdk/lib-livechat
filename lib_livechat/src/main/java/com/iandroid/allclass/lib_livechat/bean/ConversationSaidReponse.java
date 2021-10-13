@@ -16,6 +16,17 @@ public class ConversationSaidReponse extends BaseResponse {
     @JSONField(name = "from")
     private String pfid;
 
+    @JSONField(name = "to")
+    private String to_pfid;
+
+    public String getTo_pfid() {
+        return to_pfid;
+    }
+
+    public void setTo_pfid(String to_pfid) {
+        this.to_pfid = to_pfid;
+    }
+
     public String getIndex() {
         return index;
     }
@@ -48,6 +59,7 @@ public class ConversationSaidReponse extends BaseResponse {
         this.ts = ts;
     }
 
+    //from 特殊情况，如果from是自己的话，需要使用to_pfid字段
     public String getPfid() {
         return pfid;
     }

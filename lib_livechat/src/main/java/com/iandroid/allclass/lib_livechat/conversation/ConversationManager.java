@@ -93,6 +93,11 @@ public class ConversationManager {
 
         ConversationItem conversationItem = new ConversationItem();
         conversationItem.setPfid(conversationSaidReponse.getPfid());
+        //特殊处理收到自己的消息
+        if (StateChat.isMy(conversationSaidReponse.getPfid())
+                && !TextUtils.isEmpty(conversationSaidReponse.getTo_pfid())) {
+            conversationItem.setPfid(conversationSaidReponse.getTo_pfid());
+        }
 
         int index = conversationItemList.indexOf(conversationItem);
         boolean isNeedAdd = true;
