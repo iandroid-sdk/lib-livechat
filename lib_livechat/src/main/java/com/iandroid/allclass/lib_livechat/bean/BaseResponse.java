@@ -1,5 +1,7 @@
 package com.iandroid.allclass.lib_livechat.bean;
 
+import com.google.gson.JsonObject;
+
 /**
  * created by wangkm
  * on 2020/9/15.
@@ -10,6 +12,15 @@ public class BaseResponse {
     private String ret_msg;
     private long at;
     private String subject;
+    private JsonObject action;
+
+    public JsonObject getAction() {
+        return action;
+    }
+
+    public void setAction(JsonObject action) {
+        this.action = action;
+    }
 
     public String getSubject() {
         return subject;
