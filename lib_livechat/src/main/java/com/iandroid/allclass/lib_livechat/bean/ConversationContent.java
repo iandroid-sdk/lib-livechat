@@ -14,6 +14,15 @@ public class ConversationContent {
     private String gift_effect;
     private int gift_price;
     private int effect_id;
+    private int alert_type = 0;// 0不弹框提示，1表示达人弹框提示
+
+    public int getAlert_type() {
+        return alert_type;
+    }
+
+    public void setAlert_type(int alert_type) {
+        this.alert_type = alert_type;
+    }
 
     public String getGift_effect() {
         return gift_effect;

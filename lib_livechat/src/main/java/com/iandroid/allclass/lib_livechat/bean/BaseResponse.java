@@ -12,13 +12,13 @@ public class BaseResponse {
     private String ret_msg;
     private long at;
     private String subject;
-    private JsonObject action;
+    private Object action;
 
-    public JsonObject getAction() {
+    public Object getAction() {
         return action;
     }
 
-    public void setAction(JsonObject action) {
+    public void setAction(Object action) {
         this.action = action;
     }
 
