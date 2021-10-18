@@ -1,7 +1,5 @@
 package com.iandroid.allclass.lib_livechat.bean;
 
-import com.google.gson.JsonObject;
-
 /**
  * created by wangkm
  * on 2020/9/15.
