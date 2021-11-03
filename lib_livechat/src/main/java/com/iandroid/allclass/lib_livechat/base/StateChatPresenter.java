@@ -40,6 +40,12 @@ public class StateChatPresenter extends ChatManager {
     }
 
     @Override
+    public void logout() {
+        super.logout();
+        lastStateRoomChangeMsg = null;
+    }
+
+    @Override
     public Object getAuthCode() {
         JSONObject obj = new JSONObject();
         try {
