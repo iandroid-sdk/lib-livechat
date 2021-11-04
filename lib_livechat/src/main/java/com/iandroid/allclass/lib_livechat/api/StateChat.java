@@ -105,7 +105,9 @@ public class StateChat implements ISocketEventHandler {
                 if (eventData != null && eventData instanceof ConversationSaidReponse) {
                     ConversationSaidReponse conversationSaidReponse = (ConversationSaidReponse) eventData;
                     onSaid(conversationSaidReponse);
-                    ConversationManager.getInstance().updateConversationOnSaid(conversationSaidReponse, iStateKeyCallBack);
+                    ConversationManager.getInstance().updateConversationOnSaid(conversationSaidReponse,
+                            iStateKeyCallBack,
+                            StateChat.isMy(conversationSaidReponse.getTo_pfid()));
                 }
                 break;
             case SocketEvent.EVENT_C2S_SINGLELIST:
@@ -318,7 +320,9 @@ public class StateChat implements ISocketEventHandler {
                 conversationSaidReponse.setPfid(toPfid);
                 conversationSaidReponse.setTs(chatSayResponse.getCreateAt());
                 conversationSaidReponse.setContent(chatItem.getContent());
-                ConversationManager.getInstance().updateConversationOnSaid(conversationSaidReponse, iStateKeyCallBack);
+                ConversationManager.getInstance().updateConversationOnSaid(conversationSaidReponse,
+                        iStateKeyCallBack,
+                        false);
             }
         }
     }

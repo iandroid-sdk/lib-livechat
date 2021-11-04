@@ -21,7 +21,7 @@ public interface IStateKeyCallBack {
     /**
      * 收到聊天消息
      */
-    public void onReceiveChat(ConversationItem conversationItem);
+    public void onReceiveChat(ConversationItem conversationItem, boolean isFromOtherSaid);
 
 
     /**

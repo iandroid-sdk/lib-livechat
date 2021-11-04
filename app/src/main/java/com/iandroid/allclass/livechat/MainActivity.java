@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements ISocketEventHandl
     }
 
     @Override
-    public void onReceiveChat(ConversationItem conversationItem) {
+    public void onReceiveChat(ConversationItem conversationItem, boolean isFromOtherSaid) {
 
     }
 

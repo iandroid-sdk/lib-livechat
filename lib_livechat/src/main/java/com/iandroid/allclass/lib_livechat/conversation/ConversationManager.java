@@ -85,7 +85,8 @@ public class ConversationManager {
     }
 
     public void updateConversationOnSaid(ConversationSaidReponse conversationSaidReponse,
-                                         IStateKeyCallBack iStateKeyCallBack) {
+                                         IStateKeyCallBack iStateKeyCallBack,
+                                         Boolean isFromOtherSaid) {
         if (conversationSaidReponse == null
                 || conversationSaidReponse.getPfid() == null
                 || TextUtils.isEmpty(conversationSaidReponse.getPfid()))
@@ -117,7 +118,7 @@ public class ConversationManager {
         }
 
         if (iStateKeyCallBack != null) {
-            iStateKeyCallBack.onReceiveChat(conversationItem);
+            iStateKeyCallBack.onReceiveChat(conversationItem, isFromOtherSaid);
             iStateKeyCallBack.updateUnreadMsgNum(null, getTotalUnreadMsgNum());
         }
     }
