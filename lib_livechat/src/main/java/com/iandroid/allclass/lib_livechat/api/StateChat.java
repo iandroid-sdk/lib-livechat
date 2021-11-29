@@ -87,10 +87,10 @@ public class StateChat implements ISocketEventHandler {
             case SocketEvent.EVENT_C2S_SAY:
                 eventData = JSON.parseObject(original[0].toString(), ChatSayResponse.class);
                 break;
-            case SocketEvent.EVENT_UPDATE_UNREAD:
+            case SocketEvent.EVENT_READ_UPDATE:
                 eventData = JSON.parseObject(original[0].toString(), ChatUpdateUnread.class);
                 break;
-            case SocketEvent.EVENT_READ_UPDATE:
+            case SocketEvent.EVENT_UPDATE_UNREAD_NUM:
                 eventData = JSON.parseObject(original[0].toString(), ChatUnreadNum.class);
                 break;
             case SocketEvent.EVENT_CMD: {
@@ -135,7 +135,7 @@ public class StateChat implements ISocketEventHandler {
                         && iStateKeyCallBack != null)
                     iStateKeyCallBack.tickOut();
                 break;
-            case SocketEvent.EVENT_UPDATE_UNREAD:
+            case SocketEvent.EVENT_READ_UPDATE:
                 if (eventData != null && eventData instanceof ChatUpdateUnread) {
                     ChatUpdateUnread chatUpdateUnread = (ChatUpdateUnread)eventData;
                     if (!TextUtils.isEmpty(chatUpdateUnread.pfid)
@@ -146,7 +146,7 @@ public class StateChat implements ISocketEventHandler {
                     }
                 }
                 break;
-            case SocketEvent.EVENT_READ_UPDATE:
+            case SocketEvent.EVENT_UPDATE_UNREAD_NUM:
                 if (eventData != null && eventData instanceof ChatUnreadNum) {
                     updateUnreadNum((ChatUnreadNum)eventData);
                 }

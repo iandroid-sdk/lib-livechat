@@ -37,7 +37,7 @@ public class SocketEvent {
     public static final String EVENT_PRIVATECHAT_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
     public static final String EVENT_PRIVATECAHT_MLIST = "pmsg/v1/msglist";
     public static final String EVENT_PRIVATECHAT_SAY = "pmsg/v1/say";
-    public static final String EVENT_UPDATE_UNREAD = "pmsg/v1/unread_num_update";
+    public static final String EVENT_UPDATE_UNREAD_NUM = "pmsg/v1/unread_num_update";
     public static final String EVENT_READ_UPDATE = "pmsg/v1/read_update";
     public static final String EVENT_CMD = "cmd";
     public static final String CMD_REVOKE = "revoke";
