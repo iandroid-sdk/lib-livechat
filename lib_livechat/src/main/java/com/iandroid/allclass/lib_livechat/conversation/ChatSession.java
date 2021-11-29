@@ -7,6 +7,7 @@ import com.iandroid.allclass.lib_livechat.base.IChatSessionCallBack;
 import com.iandroid.allclass.lib_livechat.bean.ChatItem;
 import com.iandroid.allclass.lib_livechat.bean.ChatSayResponse;
 import com.iandroid.allclass.lib_livechat.bean.ChatSessionEntity;
+import com.iandroid.allclass.lib_livechat.bean.ChatUpdateUnread;
 import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
 import com.iandroid.allclass.lib_livechat.utils.SocketUtils;
@@ -96,8 +97,13 @@ public class ChatSession {
         return chatItem;
     }
 
+    public void readUpdate(ChatUpdateUnread chatUpdateUnread) {
+        if (iChatSessionCallBack != null) iChatSessionCallBack.readUpdate(chatUpdateUnread);
+    }
+
     public void onChatListResponse(ChatSessionEntity chatSessionEntity) {
-        if (iChatSessionCallBack != null) iChatSessionCallBack.onChatListResponse(chatSessionEntity);
+        if (iChatSessionCallBack != null)
+            iChatSessionCallBack.onChatListResponse(chatSessionEntity);
     }
 
     private JSONObject genChatMsgList(String contact_pfid,

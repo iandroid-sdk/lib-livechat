@@ -3,6 +3,7 @@ package com.iandroid.allclass.lib_livechat.base;
 import com.iandroid.allclass.lib_livechat.bean.ChatItem;
 import com.iandroid.allclass.lib_livechat.bean.ChatSayResponse;
 import com.iandroid.allclass.lib_livechat.bean.ChatSessionEntity;
+import com.iandroid.allclass.lib_livechat.bean.ChatUpdateUnread;
 
 /**
  * created by wangkm
@@ -26,5 +27,10 @@ public interface IChatSessionCallBack {
      * @param chatItem
      */
     public void onSaid(ChatItem chatItem);
+
+    /**
+     * 更新已读信息
+     */
+    public void readUpdate(ChatUpdateUnread chatUpdateUnread);
 
 }

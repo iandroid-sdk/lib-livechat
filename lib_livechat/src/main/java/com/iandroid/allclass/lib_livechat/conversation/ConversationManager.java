@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.iandroid.allclass.lib_livechat.api.StateChat;
 import com.iandroid.allclass.lib_livechat.base.IStateKeyCallBack;
+import com.iandroid.allclass.lib_livechat.bean.ChatUnreadNum;
 import com.iandroid.allclass.lib_livechat.bean.ConversationItem;
 import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
 import com.iandroid.allclass.lib_livechat.socket.SocketEvent;
@@ -74,13 +75,26 @@ public class ConversationManager {
         clearUnreadMsg(item);
         //服务器删除
         String transcationId = SocketUtils.transactionId(SocketEvent.IM_HEAD_DEL);
-        if (StateChat.getInstance().send(SocketEvent.EVENT_C2S_DELALL,
-                genDelAll(item.getPfid(), transcationId))) {
+        if (StateChat.getInstance().send(SocketEvent.EVENT_C2S_DELALL, genDelAll(item.getPfid(), transcationId))) {
             conversationItemList.remove(item);
         }
         //通知UI删除
         if (StateChat.getiStateKeyCallBack() != null) {
             StateChat.getiStateKeyCallBack().delConversation(item);
+        }
+    }
+
+    public void updateUnreadNum(ChatUnreadNum chatUnreadNum,
+                                IStateKeyCallBack iStateKeyCallBack) {
+        ConversationItem conversationItem = new ConversationItem();
+        conversationItem.setPfid(chatUnreadNum.getPfid());
+        int index = conversationItemList.indexOf(conversationItem);
+        if (index >= 0) {
+            conversationItem = conversationItemList.get(index);
+            conversationItem.setUnread(chatUnreadNum.unread_num);
+            if (iStateKeyCallBack != null) {
+                iStateKeyCallBack.updateUnreadMsgNum(null, getTotalUnreadMsgNum());
+            }
         }
     }
 
@@ -175,16 +189,19 @@ public class ConversationManager {
     public void clearUnreadMsg(ConversationItem conversationItem) {
         if (conversationItem == null) return;
         boolean code = StateChat.getInstance().send(SocketEvent.EVENT_C2S_READ,
-                genImRead(conversationItem.getPfid(), SocketUtils.transactionId(SocketEvent.IM_HEAD_READ), null));
+                genImRead(conversationItem.getPfid(),
+                        SocketUtils.transactionId(SocketEvent.IM_HEAD_READ),
+                        conversationItem.getIndex(),
+                        conversationItem.getTs()));
         if (code) {
             resetConversationUnreadInfoByItem(conversationItem);
         }
     }
 
-    public void clearUnreadMsg(String pfid) {
+    public void clearUnreadMsg(String pfid, long ts) {
         if (pfid == null) return;
         boolean code = StateChat.getInstance().send(SocketEvent.EVENT_C2S_READ,
-                genImRead(pfid, SocketUtils.transactionId(SocketEvent.IM_HEAD_READ), null));
+                genImRead(pfid, SocketUtils.transactionId(SocketEvent.IM_HEAD_READ), null, ts));
         if (code) {
             resetConversationUnreadInfoByPfid(pfid);
         }
@@ -243,13 +260,14 @@ public class ConversationManager {
 
     public static JSONObject genImRead(String contact_pfid,
                                        String sid,
-                                       String index) {
+                                       String index,
+                                       long ts) {
         JSONObject obj = new JSONObject();
         try {
             obj.put("contact_pfid", contact_pfid);
             obj.put("sid", sid);
-            if (!TextUtils.isEmpty(index))
-                obj.put("index", index);
+            if (!TextUtils.isEmpty(index)) obj.put("index", index);
+            if (ts != 0) obj.put("ts", ts);
         } catch (Exception e) {
             e.printStackTrace();
             obj = null;

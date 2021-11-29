@@ -10,6 +10,8 @@ import com.iandroid.allclass.lib_livechat.base.StateChatPresenter;
 import com.iandroid.allclass.lib_livechat.bean.ChatItem;
 import com.iandroid.allclass.lib_livechat.bean.ChatSayResponse;
 import com.iandroid.allclass.lib_livechat.bean.ChatSessionEntity;
+import com.iandroid.allclass.lib_livechat.bean.ChatUnreadNum;
+import com.iandroid.allclass.lib_livechat.bean.ChatUpdateUnread;
 import com.iandroid.allclass.lib_livechat.bean.ConversationSaidReponse;
 import com.iandroid.allclass.lib_livechat.conversation.ChatSession;
 import com.iandroid.allclass.lib_livechat.conversation.ConversationManager;
@@ -85,6 +87,12 @@ public class StateChat implements ISocketEventHandler {
             case SocketEvent.EVENT_C2S_SAY:
                 eventData = JSON.parseObject(original[0].toString(), ChatSayResponse.class);
                 break;
+            case SocketEvent.EVENT_UPDATE_UNREAD:
+                eventData = JSON.parseObject(original[0].toString(), ChatUpdateUnread.class);
+                break;
+            case SocketEvent.EVENT_READ_UPDATE:
+                eventData = JSON.parseObject(original[0].toString(), ChatUnreadNum.class);
+                break;
             case SocketEvent.EVENT_CMD: {
                 try {
                     JSONObject json = new JSONObject(original[0].toString());
@@ -120,19 +128,33 @@ public class StateChat implements ISocketEventHandler {
                     chatSayResponse((ChatSayResponse) eventData);
                 }
                 break;
-            case SocketEvent.EVENT_CMD: {
+            case SocketEvent.EVENT_CMD:
                 if (eventData != null
                         && eventData instanceof String
                         && eventData.toString().equalsIgnoreCase(SocketEvent.CMD_REVOKE)
                         && iStateKeyCallBack != null)
                     iStateKeyCallBack.tickOut();
-            }
-            break;
-            default: {
+                break;
+            case SocketEvent.EVENT_UPDATE_UNREAD:
+                if (eventData != null && eventData instanceof ChatUpdateUnread) {
+                    ChatUpdateUnread chatUpdateUnread = (ChatUpdateUnread)eventData;
+                    if (!TextUtils.isEmpty(chatUpdateUnread.pfid)
+                            && chatSessionMap.containsKey(chatUpdateUnread.pfid)) {
+                        WeakReference<ChatSession> chatSessionWeakReference = chatSessionMap.get(chatUpdateUnread.pfid);
+                        if (chatSessionWeakReference == null || chatSessionWeakReference.get() == null) return;
+                        chatSessionWeakReference.get().readUpdate(chatUpdateUnread);
+                    }
+                }
+                break;
+            case SocketEvent.EVENT_READ_UPDATE:
+                if (eventData != null && eventData instanceof ChatUnreadNum) {
+                    updateUnreadNum((ChatUnreadNum)eventData);
+                }
+                break;
+            default:
                 if (iStateKeyCallBack != null)
                     iStateKeyCallBack.onReceiveMsg(event, originalData, eventData);
-            }
-            break;
+                break;
         }
     }
 
@@ -296,6 +318,10 @@ public class StateChat implements ISocketEventHandler {
             sessionUserId = conversationSaidReponse.getTo_pfid();
         }
         return sessionUserId;
+    }
+
+    public void updateUnreadNum(ChatUnreadNum chatUnreadNum){
+        ConversationManager.getInstance().updateUnreadNum(chatUnreadNum, iStateKeyCallBack);
     }
 
     //发送消息返回响应
