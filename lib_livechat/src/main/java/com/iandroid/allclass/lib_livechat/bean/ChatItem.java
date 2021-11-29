@@ -18,6 +18,7 @@ public class ChatItem<T> {
     private String pfid;
     private String subject;
     private int status;
+    private int read_st;
     private String index;
     private int ugid;
     private int uglv;
@@ -133,6 +134,14 @@ public class ChatItem<T> {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public int getRead_st() {
+        return read_st;
+    }
+
+    public void setRead_st(int read_st) {
+        this.read_st = read_st;
     }
 
     public int getStatus() {

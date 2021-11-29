@@ -26,7 +26,7 @@ public class SocketEvent {
     public static final String EVENT_C2S_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
     public static final String EVENT_C2S_READ = "pmsg/v1/read";
     public static final String EVENT_C2S_DELALL = "pmsg/v1/delall";
-    public static final String EVENT_C2S_SINGLELIST = "pmsg/v1/msglist";
+    public static final String EVENT_C2S_SINGLELIST = "pmsg/v2/msglist";
     public static final String EVENT_C2S_DELONE = "pmsg/v1/del";
 
     //room C2S
@@ -35,7 +35,7 @@ public class SocketEvent {
     //S2C
     public static final String EVENT_PRIVATECHAT_OFFICIAL_ULIST = "pmsg/v1/ulist_official";
     public static final String EVENT_PRIVATECHAT_UNOFFICIAL_ULIST = "pmsg/v1/ulist_unofficial";
-    public static final String EVENT_PRIVATECAHT_MLIST = "pmsg/v1/msglist";
+    public static final String EVENT_PRIVATECAHT_MLIST = "pmsg/v2/msglist";
     public static final String EVENT_PRIVATECHAT_SAY = "pmsg/v1/say";
     public static final String EVENT_UPDATE_UNREAD_NUM = "pmsg/v1/unread_num_update";
     public static final String EVENT_READ_UPDATE = "pmsg/v1/read_update";
