@@ -93,6 +93,7 @@ public class ConversationManager {
             conversationItem = conversationItemList.get(index);
             conversationItem.setUnread(chatUnreadNum.unread_num);
             if (iStateKeyCallBack != null) {
+                iStateKeyCallBack.updateUnreadMsgNum(conversationItem, conversationItem.getUnread());
                 iStateKeyCallBack.updateUnreadMsgNum(null, getTotalUnreadMsgNum());
             }
         }
@@ -198,12 +199,12 @@ public class ConversationManager {
         }
     }
 
-    public void clearUnreadMsg(String pfid, long ts) {
+    public void clearUnreadMsg(String pfid, String index, long ts) {
         if (pfid == null) return;
         boolean code = StateChat.getInstance().send(SocketEvent.EVENT_C2S_READ,
-                genImRead(pfid, SocketUtils.transactionId(SocketEvent.IM_HEAD_READ), null, ts));
+                genImRead(pfid, SocketUtils.transactionId(SocketEvent.IM_HEAD_READ), index, ts));
         if (code) {
-            resetConversationUnreadInfoByPfid(pfid);
+            if (TextUtils.isEmpty(index)) resetConversationUnreadInfoByPfid(pfid);
         }
     }
 
@@ -212,9 +213,7 @@ public class ConversationManager {
         boolean isNeedUpdate = false;
         ConversationItem conversationItem = null;
         for (ConversationItem item : conversationItemList) {
-            if (item != null
-                    && pfid.equals(item.getPfid())
-                    && item.getUnread() > 0) {
+            if (item != null && pfid.equals(item.getPfid()) && item.getUnread() > 0) {
                 conversationItem = item;
                 item.setUnread(0);
                 conversationItem.setUnread(0);
